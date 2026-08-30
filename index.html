@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PENA — Catatan Seorang Penyuluh Narkoba. Ruang pemikiran, jejak, arsip, peta, dan percakapan tentang dunia Penyuluh Narkoba.">
+  <title>PENA — Catatan Seorang Penyuluh Narkoba</title>
+
+  <style>
+    :root{
+      --red:#d71920;
+      --red-dark:#a90f15;
+      --ink:#0b0d10;
+      --ink-2:#15181d;
+      --paper:#f5f5f2;
+      --white:#fff;
+      --muted:#72767d;
+      --line:#dedede;
+      --max:1180px;
+      --shadow:0 14px 40px rgba(0,0,0,.10);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,Arial,Helvetica,sans-serif;
+      color:var(--ink);
+      background:var(--paper);
+      line-height:1.6;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    /* HEADER */
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(8,9,11,.96);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(12px);
+    }
+    .nav{
+      max-width:var(--max);
+      margin:auto;
+      height:76px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:30px;
+      padding:0 22px;
+    }
+    .brand{
+      color:#fff;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:230px;
+    }
+    .brand-name{
+      font-size:32px;
+      font-weight:900;
+      letter-spacing:6px;
+      line-height:1;
+    }
+    .brand-feather{
+      color:var(--red);
+      font-size:31px;
+      transform:rotate(-18deg);
+    }
+    .brand-sub{
+      border-left:1px solid #555;
+      padding-left:13px;
+      font-size:11px;
+      line-height:1.25;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      color:#ddd;
+    }
+    nav{
+      display:flex;
+      align-items:center;
+      gap:25px;
+    }
+    nav a{
+      color:#ddd;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      position:relative;
+      padding:28px 0;
+    }
+    nav a:hover,nav a.active{color:#fff}
+    nav a.active:after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:0;
+      height:3px;background:var(--red);
+    }
+    .menu-btn{
+      display:none;
+      color:#fff;
+      background:none;
+      border:0;
+      font-size:27px;
+      cursor:pointer;
+    }
+
+    /* HERO */
+    .hero{
+      min-height:650px;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.82) 46%,rgba(0,0,0,.22) 100%),
+        url("assets/hero-penyuluh.jpg") center/cover no-repeat;
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:-1px;height:24px;
+      background:linear-gradient(170deg,transparent 35%,var(--red) 36%,var(--red) 65%,transparent 66%);
+      opacity:.95;
+    }
+    .hero-inner{
+      max-width:var(--max);
+      margin:auto;
+      min-height:650px;
+      display:flex;
+      align-items:center;
+      padding:80px 22px 100px;
+    }
+    .hero-copy{max-width:650px}
+    .eyebrow{
+      color:#bbb;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      margin-bottom:20px;
+    }
+    h1{
+      font-size:clamp(48px,7vw,86px);
+      line-height:.92;
+      letter-spacing:-3px;
+      text-transform:uppercase;
+      font-weight:950;
+      margin-bottom:25px;
+    }
+    h1 span{color:var(--red)}
+    .hero-copy p{
+      max-width:560px;
+      font-size:19px;
+      color:#e7e7e7;
+      margin-bottom:34px;
+    }
+    .buttons{display:flex;gap:13px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:14px;
+      padding:14px 20px;
+      border:1px solid var(--red);
+      background:var(--red);
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      transition:.2s;
+    }
+    .btn:hover{background:var(--red-dark);transform:translateY(-2px)}
+    .btn.ghost{
+      background:transparent;
+      border-color:#777;
+    }
+    .btn.ghost:hover{border-color:#fff;background:#fff;color:#111}
+
+    /* COMMON */
+    .section{padding:85px 22px}
+    .section-inner{max-width:var(--max);margin:auto}
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:25px;
+      margin-bottom:38px;
+    }
+    .section-kicker{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:2px;
+      color:var(--red);
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    h2{
+      font-size:clamp(32px,4vw,52px);
+      line-height:1;
+      letter-spacing:-1.5px;
+      text-transform:uppercase;
+    }
+    .section-intro{
+      max-width:520px;
+      color:#62666d;
+      font-size:15px;
+    }
+
+    /* TOPIC CARDS */
+    .topics{background:#fff}
+    .topic-grid{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:14px;
+    }
+    .topic{
+      background:#fff;
+      border:1px solid var(--line);
+      min-height:250px;
+      padding:24px 19px;
+      box-shadow:0 8px 25px rgba(0,0,0,.04);
+      transition:.25s;
+      position:relative;
+      overflow:hidden;
+    }
+    .topic:before{
+      content:"";
+      position:absolute;left:0;top:0;bottom:0;width:4px;
+      background:var(--red);
+      transform:scaleY(0);
+      transform-origin:bottom;
+      transition:.25s;
+    }
+    .topic:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+    .topic:hover:before{transform:scaleY(1)}
+    .topic-icon{
+      width:44px;height:44px;border-radius:50%;
+      display:grid;place-items:center;
+      background:#111;color:#fff;
+      font-size:18px;margin-bottom:22px;
+    }
+    .topic h3{font-size:17px;line-height:1.1;text-transform:uppercase;margin-bottom:10px}
+    .topic p{font-size:13px;color:#666;line-height:1.55}
+    .topic-link{
+      display:inline-block;
+      margin-top:20px;
+      color:var(--red);
+      font-size:11px;font-weight:900;text-transform:uppercase;
+    }
+
+    /* PETA */
+    .map-section{
+      background:#0c1117;
+      color:#fff;
+    }
+    .map-wrap{
+      display:grid;
+      grid-template-columns:1.5fr .7fr;
+      gap:50px;
+      align-items:center;
+    }
+    .map-placeholder{
+      min-height:380px;
+      border:1px solid #29313a;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(215,25,32,.18),transparent 36%),
+        linear-gradient(135deg,#0b1016,#121a23);
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .map-placeholder:before{
+      content:"PETA PENYULUH";
+      font-size:clamp(35px,5vw,70px);
+      font-weight:950;
+      letter-spacing:-2px;
+      color:rgba(255,255,255,.05);
+      position:absolute;
+      transform:rotate(-10deg);
+    }
+    .map-note{
+      text-align:center;
+      max-width:600px;
+      padding:40px;
+      z-index:1;
+    }
+    .map-note .pin{font-size:54px;margin-bottom:10px}
+    .map-note p{color:#aeb6bf}
+    .map-stats{display:grid;gap:14px}
+    .stat{
+      border-top:1px solid #343c45;
+      padding:20px 0;
+    }
+    .stat small{color:#9da5ad;text-transform:uppercase;letter-spacing:1px;font-size:10px}
+    .stat strong{display:block;font-size:38px;line-height:1.1;margin-top:5px}
+    .stat span{color:var(--red);font-weight:900}
+
+    /* ARTICLES */
+    .article-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+    .article{
+      background:#fff;
+      border:1px solid var(--line);
+      overflow:hidden;
+    }
+    .article-img{
+      height:190px;
+      background:linear-gradient(135deg,#191c20,#65686c);
+      display:grid;place-items:center;
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:2px;
+    }
+    .article-body{padding:24px}
+    .tag{
+      display:inline-block;
+      background:var(--red);color:#fff;
+      padding:4px 8px;
+      font-size:9px;font-weight:900;
+      text-transform:uppercase;
+      margin-bottom:13px;
+    }
+    .article h3{font-size:21px;line-height:1.12;margin-bottom:10px}
+    .article p{color:#666;font-size:13px}
+
+    /* REGULATIONS */
+    .archive{
+      background:#e9e9e5;
+    }
+    .reg-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:15px;
+    }
+    .reg-card{
+      background:#fff;
+      border:1px solid #d6d6d2;
+      padding:22px;
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      transition:.2s;
+    }
+    .reg-card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+    .reg-no{
+      flex:0 0 42px;height:42px;
+      background:#111;color:#fff;
+      display:grid;place-items:center;
+      font-weight:900;
+      font-size:13px;
+    }
+    .reg-status{
+      display:inline-block;
+      margin-top:9px;
+      padding:4px 8px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      background:#f0f0ee;
+      color:#555;
+    }
+    .reg-status.current{background:#eaf1ff;color:#1746a2}
+    .reg-status.historic{background:#f2f2f2;color:#666}
+    .reg-status.partial{background:#fff3df;color:#9a5a00}
+    .reg-status.repealed{background:#ffe8e8;color:#a10f16}
+    .reg-body{flex:1}
+    .reg-body h3{
+      font-size:14px;
+      line-height:1.35;
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+    .reg-body p{font-size:12px;color:#777;margin-bottom:14px}
+    .pdf-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--red);
+      font-size:10px;
+      font-weight:900;
+      text-transform:uppercase;
+      border-bottom:1px solid var(--red);
+      padding-bottom:2px;
+    }
+
+    /* DIGITAL FOOTPRINT */
+    .footprint-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+    .feature{
+      min-height:300px;
+      padding:38px;
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    .feature.dark{background:#11151a}
+    .feature.red{background:var(--red)}
+    .feature h3{font-size:31px;line-height:1;margin-bottom:15px;text-transform:uppercase}
+    .feature p{max-width:460px;color:#d5d5d5;font-size:14px}
+    .feature.red p{color:#fff}
+    .feature .btn{margin-top:25px;border-color:#fff;background:transparent}
+    .feature .btn:hover{background:#fff;color:#111}
+    .feature-mark{
+      position:absolute;
+      right:-20px;bottom:-40px;
+      font-size:170px;font-weight:950;
+      opacity:.06;
+    }
+
+    /* REFLECTION */
+    .reflection{
+      background:#fff;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+    }
+    .reflection-wrap{
+      max-width:900px;
+      margin:auto;
+      text-align:center;
+    }
+    .quote{
+      color:var(--red);
+      font-size:70px;
+      line-height:.6;
+      margin-bottom:30px;
+    }
+    .reflection h2{margin-bottom:20px}
+    .reflection p{
+      color:#5e6268;
+      font-size:17px;
+      max-width:760px;
+      margin:0 auto 25px;
+    }
+    .signature{
+      font-weight:900;
+      color:#111;
+    }
+
+    /* FOOTER */
+    footer{
+      background:#090b0e;
+      color:#fff;
+      padding:60px 22px 25px;
+    }
+    .footer-grid{
+      max-width:var(--max);
+      margin:auto;
+      display:grid;
+      grid-template-columns:1.4fr repeat(5,1fr);
+      gap:30px;
+      padding-bottom:45px;
+    }
+    .footer-brand .brand-name{font-size:30px}
+    .footer-brand p{color:#8d9298;font-size:12px;max-width:240px;margin-top:14px}
+    .footer-col h4{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:14px;
+    }
+    .footer-col a{
+      display:block;
+      color:#92979d;
+      font-size:11px;
+      margin:7px 0;
+    }
+    .footer-col a:hover{color:#fff}
+    .copyright{
+      max-width:var(--max);
+      margin:auto;
+      border-top:1px solid #24282d;
+      padding-top:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      color:#666b71;
+      font-size:10px;
+    }
+    .copyright strong{color:var(--red)}
+
+    /* MOBILE */
+    @media(max-width:1050px){
+      nav{gap:16px}
+      .topic-grid{grid-template-columns:repeat(3,1fr)}
+      .footer-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:780px){
+      .nav{height:66px}
+      .brand-sub{display:none}
+      .brand-name{font-size:27px}
+      .menu-btn{display:block}
+      nav{
+        display:none;
+        position:absolute;
+        top:66px;left:0;right:0;
+        background:#0b0d10;
+        padding:15px 22px 25px;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      nav.open{display:flex}
+      nav a{padding:10px 0}
+      nav a.active:after{bottom:2px}
+      .hero,.hero-inner{min-height:610px}
+      .hero-inner{padding-top:70px}
+      h1{font-size:54px}
+      .section{padding:65px 18px}
+      .section-head{display:block}
+      .section-intro{margin-top:15px}
+      .topic-grid,.article-grid,.reg-grid,.footprint-grid,.map-wrap{
+        grid-template-columns:1fr;
+      }
+      .topic{min-height:auto}
+      .map-placeholder{min-height:270px}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .copyright{display:block}
+      .copyright span{display:block;margin-bottom:6px}
+    }
+    @media(max-width:480px){
+      .footer-grid{grid-template-columns:1fr}
+      h1{font-size:46px}
+      .hero-copy p{font-size:16px}
+      .buttons .btn{width:100%;justify-content:center}
+    }
+  
+/* PENA — TMT floating avatar */
+.tmt-float{position:fixed;right:22px;bottom:22px;z-index:2000;width:104px;height:104px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 10px 20px rgba(0,0,0,.28));transition:.25s}
+.tmt-float:hover{transform:translateY(-7px) scale(1.04)}
+.tmt-float img{width:100%;height:100%;object-fit:contain}
+.tmt-float-label{position:absolute;right:4px;bottom:-4px;background:#d71920;color:#fff;padding:5px 9px;font-size:9px;font-weight:950;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;border-radius:20px;box-shadow:0 5px 12px rgba(0,0,0,.25)}
+@media(max-width:600px){.tmt-float{width:82px;height:82px;right:12px;bottom:12px}.tmt-float-label{font-size:8px}}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#beranda" class="brand">
+      <span class="brand-name">PENA</span>
+      <span class="brand-feather">✎</span>
+      <span class="brand-sub">Catatan Seorang<br>Penyuluh Narkoba</span>
+    </a>
+
+    <button class="menu-btn" aria-label="Buka menu" onclick="toggleMenu()">☰</button>
+
+    <nav id="mainNav">
+      <a href="#beranda" class="active">Beranda</a>
+      <a href="#penyuluh">Penyuluh</a>
+      <a href="#gagasan">Gagasan</a>
+      <a href="#jejak">Jejak</a>
+      <a href="#peta">Peta</a>
+      <a href="#arsip">Arsip</a>
+      <a href="#tmt">TMT</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="beranda">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow">PENA · Catatan Seorang Penyuluh Narkoba</div>
+        <h1>Penyuluh<br><span>bukan sekadar</span><br>pekerjaan.</h1>
+        <p>
+          Ada manusia di balik profesi. Ada pengalaman di balik pemikiran.
+          Ada perjalanan di balik sebuah pilihan.
+        </p>
+        <div class="buttons">
+          <a class="btn" href="#penyuluh">Jelajahi PENA →</a>
+          <a class="btn ghost" href="#tentang">Tentang Saya</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPICS -->
+  <section class="section topics" id="penyuluh">
+    <div class="section-inner">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Memahami Dunia Penyuluh</div>
+          <h2>Yang Saya Temukan</h2>
+        </div>
+        <p class="section-intro">
+          PENA tumbuh dari pengalaman, pembelajaran, kegelisahan, dan
+          pertanyaan tentang profesi Penyuluh Narkoba.
+        </p>
+      </div>
+
+      <div class="topic-grid">
+        <article class="topic">
+          <div class="topic-icon">◉</div>
+          <h3>Kompetensi</h3>
+          <p>Sebuah profesi perlu dipahami, dikembangkan, dan dijaga kompetensinya.</p>
+          <a class="topic-link" href="#gagasan">Baca gagasan →</a>
+        </article>
+
+        <article class="topic">
+          <div class="topic-icon">⌖</div>
+          <h3>Sebaran</h3>
+          <p>Kebutuhan masyarakat begitu luas, sementara kehadiran Penyuluh belum merata.</p>
+          <a class="topic-link" href="peta.html">Lihat peta →</a>
+        </article>
+
+        <article class="topic">
+          <div class="topic-icon">✦</div>
+          <h3>Model Penyuluhan</h3>
+          <p>Penyuluhan membutuhkan cara yang terus berkembang mengikuti masyarakat.</p>
+          <a class="topic-link" href="#gagasan">Jelajahi →</a>
+        </article>
+
+        <article class="topic">
+          <div class="topic-icon">§</div>
+          <h3>Kebijakan</h3>
+          <p>Pengalaman lapangan bertemu dengan aturan, kebijakan, dan sistem.</p>
+          <a class="topic-link" href="#arsip">Buka arsip →</a>
+        </article>
+
+        <article class="topic">
+          <div class="topic-icon">✎</div>
+          <h3>Jejak</h3>
+          <p>Tulisan dan dokumentasi yang tertinggal sepanjang perjalanan.</p>
+          <a class="topic-link" href="#jejak">Lihat jejak →</a>
+        </article>
+
+        <article class="topic">
+          <div class="topic-icon">?</div>
+          <h3>TMT</h3>
+          <p>Tanya Mas Tri — ruang bertanya tentang Penyuluh dan penyuluhan.</p>
+          <a class="topic-link" href="#tmt">Tanya sekarang →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PETA -->
+  <section class="section map-section" id="peta">
+    <div class="section-inner">
+      <div class="map-wrap">
+        <div>
+          <div class="section-kicker">Melihat Realitas</div>
+          <h2>Indonesia Begitu Luas.<br>Ujung Tombak<br><span style="color:var(--red)">Terbatas.</span></h2>
+          <p style="color:#aeb6bf;max-width:620px;margin:20px 0 12px">
+            Peta ini bukan sekadar dashboard. Ia adalah cara melihat kenyataan:
+            bagaimana sebaran Penyuluh dan keberadaan BNNK berhadapan dengan
+            luasnya wilayah Indonesia.
+          </p>
+          <p style="color:#737d87;font-size:11px;max-width:620px;margin-bottom:25px">
+            Data peta bersumber dari basis data Penyuluh Narkoba yang telah disusun
+            dan akan ditampilkan melalui halaman Peta PENA.
+          </p>
+          <a class="btn" href="peta.html">Jelajahi Peta Penyuluh →</a>
+        </div>
+
+        <div class="map-stats">
+          <div class="stat">
+            <small>Data Peta</small>
+            <strong>2026</strong>
+            <span>sebaran Penyuluh Narkoba</span>
+          </div>
+          <div class="stat">
+            <small>Yang Dibaca</small>
+            <strong>Penyuluh</strong>
+            <span>jenjang, satuan kerja, dan sebaran</span>
+          </div>
+          <div class="stat">
+            <small>Yang Dicari</small>
+            <strong>Makna</strong>
+            <span>antara kebutuhan masyarakat dan kehadiran ujung tombak</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAGASAN -->
+  <section class="section" id="gagasan">
+    <div class="section-inner">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Pemikiran</div>
+          <h2>Gagasan & Refleksi</h2>
+        </div>
+        <p class="section-intro">
+          Konten akan tumbuh sambil berjalan. Tidak perlu menunggu semuanya
+          selesai untuk mulai mencatat.
+        </p>
+      </div>
+
+      <div class="article-grid">
+        <article class="article">
+          <div class="article-img">REFLEKSI</div>
+          <div class="article-body">
+            <span class="tag">Refleksi</span>
+            <h3>Mengapa Saya Kembali Menjadi Penyuluh?</h3>
+            <p>Sebuah pertanyaan yang akan menemukan jawabannya melalui perjalanan yang terus berjalan.</p>
+          </div>
+        </article>
+
+        <article class="article">
+          <div class="article-img">PROFESI</div>
+          <div class="article-body">
+            <span class="tag">Penyuluh</span>
+            <h3>Ketika Kompetensi Menjadi Persoalan</h3>
+            <p>Catatan tentang profesi, kompetensi, dan kebutuhan untuk terus berkembang.</p>
+          </div>
+        </article>
+
+        <article class="article">
+          <div class="article-img">PENCEGAHAN</div>
+          <div class="article-body">
+            <span class="tag">Gagasan</span>
+            <h3>Mencari Model Penyuluhan yang Lebih Hidup</h3>
+            <p>Karena penyuluhan bukan hanya tentang menyampaikan materi.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARSIP PERATURAN -->
+  <section class="section archive" id="arsip">
+    <div class="section-inner">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Arsip</div>
+          <h2>Peraturan Penyuluh</h2>
+        </div>
+        <p class="section-intro">
+          Koleksi regulasi yang menemani perjalanan memahami profesi Penyuluh
+          Narkoba. <strong>15 dokumen</strong> tersusun mengikuti perjalanan
+          regulasi dari 2014 sampai 2025. Status di bawah dibedakan antara
+          regulasi yang berlaku, dicabut, dicabut sebagian, dan arsip historis.
+        </p>
+      </div>
+
+      <div class="reg-grid">
+
+        <article class="reg-card">
+          <div class="reg-no">01</div>
+          <div class="reg-body">
+            <h3>PermenPANRB Nomor 46 Tahun 2014 tentang Jabatan Fungsional Penyuluh Narkoba dan Angka Kreditnya</h3>
+            <p>Fondasi khusus pembentukan JF Penyuluh Narkoba dan angka kredit.</p>
+            <span class="reg-status partial">Dicabut sebagian</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/699oB9sHpiCZp8g#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">02</div>
+          <div class="reg-body">
+            <h3>Perka BKN Nomor 47 Tahun 2015 tentang Juknis Pelaksanaan PermenPANRB Nomor 46 Tahun 2014</h3>
+            <p>Petunjuk teknis pelaksanaan JF Penyuluh Narkoba.</p>
+            <span class="reg-status repealed">Dicabut</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://peraturan.bpk.go.id/Download/132951/Perka%20BKN%20Nomor%2047%20Tahun%202015.pdf">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">03</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 8 Tahun 2015 tentang Petunjuk Teknis Pelaksanaan Jabatan Fungsional Penyuluh Narkoba</h3>
+            <p>Petunjuk teknis pelaksanaan jabatan fungsional Penyuluh Narkoba.</p>
+            <span class="reg-status historic">Arsip pelaksanaan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/JLLs84rWnEyZHex#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">04</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 9 Tahun 2015 tentang Petunjuk Teknis Pelaksanaan Penyesuaian/Inpassing JF Penyuluh Narkoba</h3>
+            <p>Ketentuan penyesuaian/inpassing jabatan fungsional.</p>
+            <span class="reg-status historic">Arsip inpassing</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/A3tNPegD4fAsi29#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">05</div>
+          <div class="reg-body">
+            <h3>Kepka BNN Nomor KEP/137/IV/KA/OT.01/2016/BNN tentang Pelaksanaan Uji Kompetensi Penyesuaian/Inpassing JF Penyuluh Narkoba</h3>
+            <p>Dokumen pelaksanaan uji kompetensi penyesuaian/inpassing.</p>
+            <span class="reg-status historic">Arsip inpassing</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/iNBMFdwYkpF8sPS#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">06</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 12 Tahun 2016 tentang Pembina Fungsi, Tata Kerja Tim Penilai Kinerja dan Tata Cara Penilaian Kinerja JF Penyuluh Narkoba</h3>
+            <p>Ketentuan pembinaan fungsi dan penilaian kinerja Penyuluh Narkoba.</p>
+            <span class="reg-status historic">Arsip pembinaan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/KQDMToAFxB9EX3S#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">07</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 21 Tahun 2016 tentang Pedoman Penyelenggaraan Pendidikan dan/atau Pelatihan JF Penyuluh Narkoba</h3>
+            <p>Pedoman pendidikan dan/atau pelatihan Jabatan Fungsional Penyuluh Narkoba.</p>
+            <span class="reg-status historic">Arsip pengembangan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/XFnDQ2F5XPR8N3y#pdfviewer" >Buka JDIH BNN →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">08</div>
+          <div class="reg-body">
+            <h3>Perpres Nomor 51 Tahun 2017 tentang Tunjangan Jabatan Fungsional Penyuluh Narkoba</h3>
+            <p>Ketentuan tunjangan jabatan fungsional Penyuluh Narkoba.</p>
+            <span class="reg-status historic">Arsip kesejahteraan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/xAdfXoiwG7bzS82#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">09</div>
+          <div class="reg-body">
+            <h3>PermenPANRB Nomor 13 Tahun 2019 tentang Pengusulan, Penetapan, dan Pembinaan Jabatan Fungsional PNS</h3>
+            <p>Kerangka umum JF pada rezim sebelum PermenPANRB Nomor 1 Tahun 2023.</p>
+            <span class="reg-status repealed">Dicabut</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://peraturan.bpk.go.id/Download/135304/Permenpan%20Nomor%2013%20Tahun%202019.pdf">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">10</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 2 Tahun 2020 tentang Standar Kompetensi Jabatan Fungsional Penyuluh Narkoba</h3>
+            <p>Standar kompetensi teknis, manajerial, dan sosial kultural Penyuluh Narkoba.</p>
+            <span class="reg-status current">Berlaku</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/A46Q5mWNTWbscL5#pdfviewer">Buka dokumen →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">11</div>
+          <div class="reg-body">
+            <h3>Perka BNN Nomor 2 Tahun 2022 tentang Organisasi Profesi JF Penyuluh Narkoba</h3>
+            <p>Ketentuan mengenai organisasi profesi Jabatan Fungsional Penyuluh Narkoba.</p>
+            <span class="reg-status current">Berlaku</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/xZomAzrAqy5zLJi#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">12</div>
+          <div class="reg-body">
+            <h3>Peraturan BKN Nomor 11 Tahun 2022 tentang Pedoman Teknis Pembinaan Kepegawaian Jabatan Fungsional</h3>
+            <p>Pedoman teknis pembinaan kepegawaian jabatan fungsional.</p>
+            <span class="reg-status current">Berlaku</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/N5XwMzWGid3jwk3#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">13</div>
+          <div class="reg-body">
+            <h3>PermenPANRB Nomor 1 Tahun 2023 tentang Jabatan Fungsional</h3>
+            <p>Kerangka umum JF terbaru: pengangkatan, kinerja, kenaikan pangkat, kompetensi, instansi pembina, dan organisasi profesi.</p>
+            <span class="reg-status current">Berlaku · Kerangka utama</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/4edFgGriYFjnHG7#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">14</div>
+          <div class="reg-body">
+            <h3>SE BNN Nomor SE/38/V/KA/KP.09/2024/BNN tentang Bidang Tugas, Ruang Lingkup Kegiatan, dan Penilaian Angka Kredit JF Binaan BNN</h3>
+            <p>Pedoman bidang tugas, ruang lingkup kegiatan, dan penilaian angka kredit.</p>
+            <span class="reg-status current">Pedoman pelaksanaan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/wdbkYEKyzWAmXTL#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+        <article class="reg-card">
+          <div class="reg-no">15</div>
+          <div class="reg-body">
+            <h3>SE BNN Nomor SE/46/VII/KA/KP.09/2025/BNN tentang Uji Kompetensi Jabatan Fungsional Binaan BNN</h3>
+            <p>Ketentuan uji kompetensi JF binaan BNN, termasuk Penyuluh Narkoba.</p>
+            <span class="reg-status current">Pedoman pelaksanaan</span>
+            <a class="pdf-btn" target="_blank" rel="noopener" href="https://cloud.bnn.go.id/index.php/s/ssdpfTnccRbH7z5#pdfviewer">Buka dokumen PDF →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- JEJAK + TMT -->
+  <section class="section" id="jejak">
+    <div class="section-inner">
+      <div class="footprint-grid">
+        <article class="feature dark">
+          <div class="feature-mark">✎</div>
+          <div class="section-kicker">Jejak Digital</div>
+          <h3>Blog Penyuluh Narkoba</h3>
+          <p>
+            Tulisan, catatan, dan gagasan lama yang menjadi bagian dari perjalanan
+            memahami dan mengembangkan dunia Penyuluh Narkoba.
+          </p>
+          <a class="btn" target="_blank" rel="noopener" href="https://penyuluhnarkoba.blogspot.com/">Kunjungi Blog →</a>
+        </article>
+
+        <article class="feature red" id="tmt">
+          <div class="feature-mark">?</div>
+          <div class="section-kicker" style="color:#fff">Ruang Percakapan</div>
+          <h3>Tanya Mas Tri</h3>
+          <p>
+            Punya pertanyaan tentang profesi Penyuluh, penyuluhan, kebijakan,
+            pengalaman lapangan, atau sekadar ingin berdiskusi?
+          </p>
+          <a class="btn" href="tmt.html">Tanya Sekarang →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section reflection" id="tentang">
+    <div class="reflection-wrap">
+      <div class="quote">“</div>
+      <h2>Kenapa Saya Kembali Menjadi Penyuluh?</h2>
+      <p>
+        Setelah bertahun-tahun berada di dunia Pencegahan, bersentuhan dengan
+        persoalan Penyuluh, melihat kompetensi, sebaran, model penyuluhan,
+        kebijakan, dan realitas di lapangan, saya menemukan satu keyakinan:
+        <strong>menjadi Penyuluh bukan sekadar pekerjaan.</strong>
+      </p>
+      <p>
+        Ada nilai yang saya temukan di dalamnya — mengajak kepada kebaikan
+        dan mencegah kemunkaran.
+      </p>
+      <div class="signature">— Tri Tjahyono</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <span class="brand-name">PENA</span>
+        <span class="brand-feather">✎</span>
+      </div>
+      <p>
+        Catatan, pemikiran, arsip, dan jejak perjalanan seorang Penyuluh Narkoba.
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Penyuluh</h4>
+      <a href="#penyuluh">Kompetensi</a>
+      <a href="#penyuluh">Tugas & Peran</a>
+      <a href="#gagasan">Pengembangan</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Gagasan</h4>
+      <a href="#gagasan">Pemikiran</a>
+      <a href="#gagasan">Refleksi</a>
+      <a href="#gagasan">Model Penyuluhan</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Jejak</h4>
+      <a href="#jejak">Blog Penyuluh</a>
+      <a href="#jejak">Catatan</a>
+      <a href="#jejak">Dokumentasi</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Peta</h4>
+      <a href="peta.html">Peta Penyuluh</a>
+      <a href="peta.html">Data & Fakta</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Arsip</h4>
+      <a href="#arsip">Peraturan</a>
+      <a href="#arsip">Dokumen</a>
+      <a href="#tmt">TMT</a>
+    </div>
+  </div>
+
+  <div class="copyright">
+    <span>© <span id="year"></span> PENA — Catatan Seorang Penyuluh Narkoba.</span>
+    <span>Dibuat dengan hati untuk <strong>Indonesia Bersinar.</strong></span>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu(){
+    document.getElementById('mainNav').classList.toggle('open');
+  }
+
+  document.querySelectorAll('#mainNav a').forEach(link=>{
+    link.addEventListener('click',()=>{
+      document.getElementById('mainNav').classList.remove('open');
+    });
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const sections = document.querySelectorAll('main section[id]');
+  const navLinks = document.querySelectorAll('#mainNav a');
+
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        navLinks.forEach(a=>a.classList.remove('active'));
+        const active = document.querySelector('#mainNav a[href="#'+entry.target.id+'"]');
+        if(active) active.classList.add('active');
+      }
+    });
+  },{rootMargin:'-35% 0px -55% 0px'});
+
+  sections.forEach(section=>observer.observe(section));
+</script>
+
+
+<!-- TMT FLOATING AVATAR -->
+<button class="tmt-float" type="button" aria-label="Buka Tanya Mas Tri" onclick="location.href='tmt.html'">
+  <img src="assets/tije-avatar.png" alt="TMT Tanya Mas Tri">
+  <span class="tmt-float-label">Tanya Mas Tri</span>
+</button>
+
+</body>
+</html>

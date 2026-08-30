@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Peta Penyuluh Narkoba Indonesia — PENA. Membaca sebaran Penyuluh dan realitas ujung tombak pencegahan.">
+<title>Peta Penyuluh — PENA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<style>
+:root{--red:#d71920;--ink:#090b0e;--paper:#f4f4f1;--muted:#747a81;--line:#ddd}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--paper);color:#111}
+a{text-decoration:none;color:inherit}.top{background:#090b0e;color:#fff}.nav{max-width:1180px;margin:auto;height:76px;padding:0 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:950;font-size:31px;letter-spacing:6px}.logo i{color:var(--red);font-style:normal}.back{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#ddd}.back:hover{color:#fff}
+.hero{background:#090b0e;color:#fff;padding:72px 22px 75px;border-top:1px solid #222}.hero-inner{max-width:1180px;margin:auto}
+.kicker{color:var(--red);font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
+h1{font-size:clamp(42px,6vw,76px);line-height:.95;letter-spacing:-3px;text-transform:uppercase;margin:0 0 20px;max-width:800px}
+.hero p{color:#bfc4c9;max-width:720px;font-size:17px;margin:0}
+.wrap{max-width:1180px;margin:auto;padding:45px 22px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--line);padding:22px}.stat small{display:block;text-transform:uppercase;font-size:10px;font-weight:900;color:#777;letter-spacing:1px}.stat strong{font-size:35px;line-height:1.1;display:block;margin-top:7px}.stat span{font-size:11px;color:var(--red);font-weight:800}
+.special-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 22px}
+.special-card{background:#111;color:#fff;border:1px solid #252a30;padding:18px;display:flex;align-items:center;gap:14px}
+.special-icon{width:48px;height:48px;border:1px solid var(--red);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:950}
+.special-card small{display:block;color:#aeb4bb;font-size:9px;font-weight:900;letter-spacing:1px}
+.special-card strong{display:block;font-size:30px;line-height:1.1;margin:3px 0}
+.special-card span{font-size:10px;color:var(--red);font-weight:800}
+.map-status{padding:10px 14px;background:#111;color:#fff;font-size:11px;font-weight:800}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid #eee;background:#fff;font-size:10px;color:#666}
+.map-label{background:#fff!important;border:1px solid #aaa!important;color:#111!important;font-size:9px!important;font-weight:900!important;padding:3px 5px!important;box-shadow:0 2px 6px rgba(0,0,0,.15)!important}.map-label:before{display:none!important}.pusat-label{background:#111!important;color:#fff!important;border-color:#d71920!important}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.toolbar input,.toolbar select{height:44px;border:1px solid #ccc;background:#fff;padding:0 14px;font-size:13px;outline:none}.toolbar input{min-width:260px;flex:1}.toolbar select{min-width:220px}.toolbar button{height:44px;border:0;background:var(--ink);color:#fff;padding:0 18px;font-weight:900;cursor:pointer}
+.grid{display:grid;grid-template-columns:1.45fr .55fr;gap:14px}.panel{background:#fff;border:1px solid var(--line);box-shadow:0 7px 25px rgba(0,0,0,.04)}.panel-head{padding:16px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}.panel-head h2{font-size:15px;text-transform:uppercase;margin:0;white-space:nowrap;letter-spacing:-.3px}.panel-head span{font-size:10px;color:#777}
+#map{height:610px;width:100%;background:#dce4e9}
+.table-wrap{max-height:610px;overflow:auto}.table{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed}.table th{position:sticky;top:0;background:#111;color:#fff;text-align:center;padding:9px 2px;font-size:8px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}.table td{padding:9px 3px;border-bottom:1px solid #eee;white-space:normal;overflow-wrap:anywhere;line-height:1.25}
+.table th:nth-child(1),.table td:nth-child(1){width:38%;text-align:left}
+.table th:nth-child(2),.table td:nth-child(2){width:12.4%;text-align:center}
+.table th:nth-child(3),.table td:nth-child(3){width:12.4%;text-align:center}
+.table th:nth-child(4),.table td:nth-child(4){width:12.4%;text-align:center}
+.table th:nth-child(5),.table td:nth-child(5){width:12.4%;text-align:center}
+.table th:nth-child(6),.table td:nth-child(6){width:12.4%;text-align:center}
+.table td.num{white-space:nowrap}
+.table td:last-child .pill{white-space:nowrap;display:inline-block;min-width:28px;text-align:center}
+
+.table tr:hover{background:#fafafa}.num{font-weight:900;text-align:right}.pill{display:inline-block;padding:3px 6px;font-size:9px;font-weight:900;background:#f1f1f1}.pill.low{background:#fff1f1;color:var(--red)}
+.note{margin-top:18px;background:#0d1218;color:#fff;padding:28px}.note h2{margin:0 0 12px;font-size:26px;text-transform:uppercase}.note p{color:#bac1c8;margin:0;line-height:1.7;font-size:13px}.note strong{color:#fff}.source{font-size:10px;color:#888;margin-top:14px}
+footer{background:#090b0e;color:#888;padding:28px 22px;font-size:10px}footer div{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:20px}footer strong{color:var(--red)}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.special-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}#map{height:450px}}
+@media(max-width:600px){.nav{height:64px}.logo{font-size:25px}.hero{padding:55px 18px}.wrap{padding:30px 14px}.stats{grid-template-columns:1fr 1fr}.stat{padding:16px}.stat strong{font-size:27px}.hero p{font-size:15px}.toolbar input{min-width:100%}.toolbar select{width:100%}.table{font-size:11px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="nav"><a class="logo" href="index.html">PENA<span>✎</span></a><a class="back" href="index.html">← Kembali ke PENA</a></div></header>
+
+<section class="hero">
+<div class="hero-inner">
+<div class="kicker">PENA · Membaca Realitas</div>
+<h1>Seberapa Panjang<br>Ujung Tombak<br><span style="color:var(--red)">Indonesia Bersinar?</span></h1>
+<p>
+Peta ini tidak dibuat untuk sekadar menghitung orang. Ia membantu melihat
+bagaimana Penyuluh Narkoba tersebar di Indonesia—dan bagaimana luasnya
+wilayah berhadapan dengan keterbatasan ujung tombak pencegahan.
+</p>
+</div>
+</section>
+
+<main class="wrap">
+<div class="stats" id="stats"></div>
+<div class="special-grid" id="specialStats">
+  <div class="special-card">
+    <div class="special-icon">★</div>
+    <div><small>AHLI UTAMA</small><strong id="utamaTotal">1</strong><span>Penyuluh Ahli Utama</span></div>
+  </div>
+  <div class="special-card">
+    <div class="special-icon">DKI</div>
+    <div><small>DKI JAKARTA</small><strong id="dkiTotal">18</strong><span>BNNP + BNN Kota</span></div>
+  </div>
+  <div class="special-card">
+    <div class="special-icon">PST</div>
+    <div><small>PUSAT BNN RI</small><strong id="pusatTotal">36</strong><span>terpisah dari wilayah DKI</span></div>
+  </div>
+</div>
+
+<div class="toolbar">
+<input id="search" type="search" placeholder="Cari provinsi atau Pusat BNN RI...">
+<select id="level">
+<option value="all">Semua jenjang</option>
+<option value="pertama">Ahli Pertama</option>
+<option value="muda">Ahli Muda</option>
+<option value="madya">Ahli Madya</option>
+<option value="utama">Ahli Utama</option>
+</select>
+<button id="reset">Reset</button>
+</div>
+
+<div class="grid">
+<section class="panel">
+<div class="panel-head"><h2>Peta Sebaran Penyuluh</h2><span>Data Provinsi · 2026</span></div>
+<div id="map"></div>
+<div class="map-legend">
+  <span><i class="legend-dot" style="background:#123b8f"></i>30+</span>
+  <span><i class="legend-dot" style="background:#1d4ed8"></i>15–29</span>
+  <span><i class="legend-dot" style="background:#3b82f6"></i>6–14</span>
+  <span><i class="legend-dot" style="background:#93c5fd"></i>1–5</span>
+  <span style="margin-left:auto">Sumber data: <strong>April 2026</strong></span>
+</div>
+</section>
+
+<section class="panel">
+<div class="panel-head"><h2>Ringkasan Provinsi</h2><span id="count"></span></div>
+<div class="table-wrap">
+<table class="table">
+<thead><tr><th>Provinsi</th><th>Pertama</th><th>Muda</th><th>Madya</th><th>Utama</th><th>Total</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+</section>
+</div>
+
+<section class="panel" style="margin-top:18px">
+  <div class="panel-head">
+    <h2>Pusat BNN RI</h2>
+    <span>Dipisahkan dari DKI Jakarta</span>
+  </div>
+  <div style="padding:20px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="stat"><small>Ahli Pertama</small><strong>15</strong><span>orang</span></div>
+      <div class="stat"><small>Ahli Muda</small><strong>13</strong><span>orang</span></div>
+      <div class="stat"><small>Ahli Madya</small><strong>7</strong><span>orang</span></div>
+      <div class="stat"><small>Ahli Utama</small><strong>1</strong><span>orang</span></div>
+    </div>
+    <p style="margin:16px 0 0;color:#666;font-size:12px">
+      Pusat pada data ini merujuk pada <strong>Deputi Bidang Pencegahan</strong>
+      dan tidak dihitung sebagai sebaran geografis DKI Jakarta.
+    </p>
+  </div>
+</section>
+
+<section class="note">
+<div class="kicker">Membaca Data</div>
+<h2>Data adalah pintu masuk untuk bertanya.</h2>
+<p>
+Angka-angka ini memperlihatkan <strong>sebaran</strong>, bukan otomatis mengukur
+kualitas penyuluhan. Namun ketika wilayah Indonesia begitu luas dan jumlah
+Penyuluh terbatas, data dapat menjadi dasar untuk bertanya tentang
+<strong>kecukupan, pemerataan, kompetensi, dan pengembangan model penyuluhan.</strong>
+Di situlah Peta menjadi bagian dari perjalanan pemikiran PENA.
+</p>
+<div class="source">Sumber data: Master Peta Penyuluh Narkoba — April 2026. Pada tampilan PENA, data DKI Jakarta dipisahkan dari Pusat BNN RI; 36 Penyuluh pada Deputi Bidang Pencegahan ditampilkan sebagai Pusat, bukan sebagai sebaran DKI.</div>
+</section>
+</main>
+
+<footer><div><span>© <span id="year"></span> PENA — Catatan Seorang Penyuluh Narkoba</span><span>Dibuat dengan hati untuk <strong>Indonesia Bersinar.</strong></span></div></footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+<script>
+const DATA = [{"province": "Aceh", "pertama": 19, "muda": 12, "madya": 1, "utama": 0, "total": 32, "lat": -4.6951, "lng": 96.7494}, {"province": "BALI", "pertama": 12, "muda": 2, "madya": 1, "utama": 0, "total": 15, "lat": -8.4095, "lng": 115.1889}, {"province": "BANTEN", "pertama": 5, "muda": 7, "madya": 1, "utama": 0, "total": 13, "lat": -6.4058, "lng": 106.064}, {"province": "BENGKULU", "pertama": 3, "muda": 4, "madya": 2, "utama": 0, "total": 9, "lat": -3.7928, "lng": 102.2608}, {"province": "DAERAH ISTIMEWA YOGYAKARTA", "pertama": 6, "muda": 8, "madya": 1, "utama": 0, "total": 15, "lat": -7.8754, "lng": 110.4262}, {"province": "DKI JAKARTA", "pertama": 6, "muda": 11, "madya": 1, "utama": 0, "total": 18, "lat": -6.2088, "lng": 106.8456}, {"province": "PUSAT BNN RI", "pertama": 15, "muda": 13, "madya": 7, "utama": 1, "total": 36, "lat": -6.1751, "lng": 106.8272, "pusat": true}, {"province": "GORONTALO", "pertama": 11, "muda": 3, "madya": 1, "utama": 0, "total": 15, "lat": 0.6999, "lng": 122.4467}, {"province": "JAMBI", "pertama": 4, "muda": 2, "madya": 0, "utama": 0, "total": 6, "lat": -1.6101, "lng": 103.6131}, {"province": "JAWA BARAT", "pertama": 25, "muda": 16, "madya": 1, "utama": 0, "total": 42, "lat": -6.8892, "lng": 107.6405}, {"province": "JAWA TENGAH", "pertama": 11, "muda": 19, "madya": 2, "utama": 0, "total": 32, "lat": -7.1509, "lng": 110.1403}, {"province": "JAWA TIMUR", "pertama": 31, "muda": 24, "madya": 0, "utama": 0, "total": 55, "lat": -7.5361, "lng": 112.2384}, {"province": "KALIMANTAN BARAT", "pertama": 16, "muda": 1, "madya": 1, "utama": 0, "total": 18, "lat": -0.2788, "lng": 111.4753}, {"province": "KALIMANTAN SELATAN", "pertama": 11, "muda": 7, "madya": 1, "utama": 0, "total": 19, "lat": -3.0926, "lng": 115.2838}, {"province": "KALIMANTAN TENGAH", "pertama": 3, "muda": 5, "madya": 1, "utama": 0, "total": 9, "lat": -1.6815, "lng": 113.3824}, {"province": "KALIMANTAN TIMUR", "pertama": 4, "muda": 2, "madya": 1, "utama": 0, "total": 7, "lat": 0.5387, "lng": 116.4194}, {"province": "KALIMANTAN UTARA", "pertama": 5, "muda": 2, "madya": 1, "utama": 0, "total": 8, "lat": 3.0731, "lng": 116.0414}, {"province": "KEPULAUAN BANGKA BELITUNG", "pertama": 8, "muda": 1, "madya": 0, "utama": 0, "total": 9, "lat": -2.7411, "lng": 106.4406}, {"province": "KEPULAUAN RIAU", "pertama": 5, "muda": 5, "madya": 1, "utama": 0, "total": 11, "lat": 3.9457, "lng": 108.1429}, {"province": "LAMPUNG", "pertama": 7, "muda": 7, "madya": 0, "utama": 0, "total": 14, "lat": -4.5586, "lng": 105.4068}, {"province": "MALUKU", "pertama": 4, "muda": 1, "madya": 0, "utama": 0, "total": 5, "lat": -3.2385, "lng": 130.1453}, {"province": "MALUKU UTARA", "pertama": 4, "muda": 2, "madya": 2, "utama": 0, "total": 8, "lat": 1.5709, "lng": 127.8088}, {"province": "NUSA TENGGARA BARAT", "pertama": 8, "muda": 5, "madya": 2, "utama": 0, "total": 15, "lat": -8.6529, "lng": 117.3616}, {"province": "NUSA TENGGARA TIMUR", "pertama": 6, "muda": 4, "madya": 0, "utama": 0, "total": 10, "lat": -9.6576, "lng": 120.9647}, {"province": "PAPUA", "pertama": 5, "muda": 2, "madya": 0, "utama": 0, "total": 7, "lat": -4.2699, "lng": 138.0804}, {"province": "PAPUA BARAT", "pertama": 2, "muda": 2, "madya": 1, "utama": 0, "total": 5, "lat": -1.3361, "lng": 133.1747}, {"province": "RIAU", "pertama": 10, "muda": 3, "madya": 1, "utama": 0, "total": 14, "lat": 0.2933, "lng": 101.7068}, {"province": "SULAWESI BARAT", "pertama": 7, "muda": 2, "madya": 1, "utama": 0, "total": 10, "lat": -2.8441, "lng": 119.2321}, {"province": "SULAWESI SELATAN", "pertama": 12, "muda": 9, "madya": 2, "utama": 0, "total": 23, "lat": -3.6688, "lng": 119.9741}, {"province": "SULAWESI TENGAH", "pertama": 10, "muda": 8, "madya": 2, "utama": 0, "total": 20, "lat": -1.43, "lng": 121.4456}, {"province": "SULAWESI TENGGARA", "pertama": 6, "muda": 8, "madya": 2, "utama": 0, "total": 16, "lat": -4.1449, "lng": 122.1746}, {"province": "SULAWESI UTARA", "pertama": 8, "muda": 4, "madya": 0, "utama": 0, "total": 12, "lat": 0.6247, "lng": 123.975}, {"province": "SUMATERA BARAT", "pertama": 13, "muda": 6, "madya": 1, "utama": 0, "total": 20, "lat": -0.7399, "lng": 100.8}, {"province": "SUMATERA SELATAN", "pertama": 19, "muda": 14, "madya": 3, "utama": 0, "total": 36, "lat": -3.3194, "lng": 104.914}, {"province": "SUMATERA UTARA", "pertama": 28, "muda": 24, "madya": 2, "utama": 0, "total": 54, "lat": 2.1154, "lng": 99.5451}];
+
+const map = L.map('map',{scrollWheelZoom:true,zoomControl:true}).setView([-2.2,118.0],4.5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+ maxZoom:10, attribution:'&copy; OpenStreetMap contributors'
+}).addTo(map);
+setTimeout(()=>map.invalidateSize(),250);
+
+let markers=[];
+function radius(total){return Math.max(8,Math.min(30,8+total*0.38))}
+function markerStyle(d){
+  const t=d.total;
+  let fill='#2563eb';
+  if(t>=30) fill='#123b8f';
+  else if(t>=15) fill='#1d4ed8';
+  else if(t>=6) fill='#3b82f6';
+  else fill='#93c5fd';
+  return {radius:radius(t),fillColor:fill,color:'#fff',weight:2,fillOpacity:.9};
+}
+function draw(){
+  markers.forEach(m=>m.remove()); markers=[];
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const level=document.getElementById('level').value;
+  const filtered=DATA.filter(d=>{
+    const matchName=!q||d.province.toLowerCase().includes(q);
+    const matchLevel=level==='all'||d[level]>0;
+    return matchName&&matchLevel;
+  });
+  filtered.forEach(d=>{
+    const style = d.pusat
+      ? {radius:16,fillColor:'#0f172a',color:'#2563eb',weight:4,fillOpacity:.95}
+      : markerStyle(d);
+    const m=L.circleMarker([d.lat,d.lng],style).addTo(map);
+    const label = d.pusat ? 'PUSAT BNN RI · DEPUTI BIDANG PENCEGAHAN' : d.province;
+    m.bindTooltip(`${label} · ${d.total}`,{
+      permanent:true,
+      direction:'top',
+      offset:[0,-8],
+      className:d.pusat?'map-label pusat-label':'map-label'
+    });
+    m.bindPopup(`<strong>${label}</strong><br>Total Penyuluh: <b>${d.total}</b><br>Ahli Pertama: ${d.pertama}<br>Ahli Muda: ${d.muda}<br>Ahli Madya: ${d.madya}<br>Ahli Utama: ${d.utama}`);
+    markers.push(m);
+  });
+  renderTable(filtered);
+  document.getElementById('count').textContent=filtered.length+' provinsi';
+}
+function renderTable(rows){
+ const body=document.getElementById('tbody');
+ body.innerHTML=rows.sort((a,b)=>b.total-a.total).map(d=>`
+ <tr><td><b>${d.province}</b></td><td class="num">${d.pertama}</td><td class="num">${d.muda}</td><td class="num">${d.madya}</td><td class="num">${d.utama}</td><td class="num"><span class="pill ${d.total<=5?'low':''}">${d.total}</span></td></tr>`).join('');
+}
+function stats(){
+ const total=DATA.reduce((s,d)=>s+d.total,0);
+ const p=DATA.reduce((s,d)=>s+d.pertama,0), m=DATA.reduce((s,d)=>s+d.muda,0);
+ const md=DATA.reduce((s,d)=>s+d.madya,0), u=DATA.reduce((s,d)=>s+d.utama,0);
+ const dki=DATA.find(d=>d.province==='DKI JAKARTA');
+ const pusat=DATA.find(d=>d.province==='PUSAT BNN RI');
+ document.getElementById('stats').innerHTML=`
+ <div class="stat"><small>Total Penyuluh</small><strong>${total}</strong><span>seluruh data</span></div>
+ <div class="stat"><small>Ahli Pertama</small><strong>${p}</strong><span>jenjang</span></div>
+ <div class="stat"><small>Ahli Muda</small><strong>${m}</strong><span>jenjang</span></div>
+ <div class="stat"><small>Ahli Madya</small><strong>${md}</strong><span>jenjang</span></div>
+ <div class="stat"><small>Ahli Utama</small><strong>${u}</strong><span>jenjang</span></div>`;
+ document.getElementById('utamaTotal').textContent=u;
+ document.getElementById('dkiTotal').textContent=dki ? dki.total : '—';
+ document.getElementById('pusatTotal').textContent=pusat ? pusat.total : '—';
+}
+document.getElementById('search').addEventListener('input',draw);
+document.getElementById('level').addEventListener('change',draw);
+document.getElementById('reset').addEventListener('click',()=>{
+ document.getElementById('search').value='';document.getElementById('level').value='all';draw();map.setView([-2.2,118.0],4.5);
+});
+stats();draw();
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
