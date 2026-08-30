@@ -2,10 +2,10 @@
 title: "Peraturan Menteri Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 1 Tahun 2023"
 title_short: "PermenPANRB Nomor 1 Tahun 2023"
 tentang: "Jabatan Fungsional"
-ditetapkan: "6 Januari 2023"
-diundangkan: "12 Januari 2023"
+ditetapkan: "2023-01-06"
+diundangkan: "2023-01-12"
 berita_negara: "Berita Negara Republik Indonesia Tahun 2023 Nomor 54"
-mulai_berlaku: "1 Juli 2023"
+mulai_berlaku: "2023-07-01"
 sumber: "Permen PANRB Nomor 1 Tahun 2023.pdf"
 ---
 

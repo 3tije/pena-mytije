@@ -1,5 +1,5 @@
 ---
-date: 16 Oktober 2014
+date: "2014-10-16"
 source: Berita Negara Republik Indonesia Tahun 2014 Nomor 1807
 subtitle: Jabatan Fungsional Penyuluh Narkoba
 title: Peraturan Menteri PANRB Nomor 46 Tahun 2014

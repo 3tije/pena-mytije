@@ -1,8 +1,8 @@
 ---
 title: "Peraturan Menteri Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 13 Tahun 2019"
 subtitle: "Pengusulan, Penetapan, dan Pembinaan Jabatan Fungsional Pegawai Negeri Sipil"
-ditetapkan: "29 Juli 2019"
-diundangkan: "30 Juli 2019"
+ditetapkan: "2019-07-29"
+diundangkan: "2019-07-30"
 berita_negara: "Berita Negara Republik Indonesia Tahun 2019 Nomor 834"
 sumber: "Permenpan Nomor 13 Tahun 2019 (1).pdf"
 ---
