@@ -67,23 +67,8 @@ wilayah berhadapan dengan keterbatasan ujung tombak pencegahan.
 
 <main class="wrap">
 <div class="stats" id="stats"></div>
-<div class="special-grid" id="specialStats">
-  <div class="special-card">
-    <div class="special-icon">★</div>
-    <div><small>AHLI UTAMA</small><strong id="utamaTotal">1</strong><span>Penyuluh Ahli Utama</span></div>
-  </div>
-  <div class="special-card">
-    <div class="special-icon">DKI</div>
-    <div><small>DKI JAKARTA</small><strong id="dkiTotal">18</strong><span>BNNP + BNN Kota</span></div>
-  </div>
-  <div class="special-card">
-    <div class="special-icon">PST</div>
-    <div><small>PUSAT BNN RI</small><strong id="pusatTotal">36</strong><span>terpisah dari wilayah DKI</span></div>
-  </div>
-</div>
-
 <div class="toolbar">
-<input id="search" type="search" placeholder="Cari provinsi atau Pusat BNN RI...">
+<input id="search" type="search" placeholder="Cari provinsi...">
 <select id="level">
 <option value="all">Semua jenjang</option>
 <option value="pertama">Ahli Pertama</option>
@@ -117,25 +102,6 @@ wilayah berhadapan dengan keterbatasan ujung tombak pencegahan.
 </div>
 </section>
 </div>
-
-<section class="panel" style="margin-top:18px">
-  <div class="panel-head">
-    <h2>Pusat BNN RI</h2>
-    <span>Dipisahkan dari DKI Jakarta</span>
-  </div>
-  <div style="padding:20px">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
-      <div class="stat"><small>Ahli Pertama</small><strong>15</strong><span>orang</span></div>
-      <div class="stat"><small>Ahli Muda</small><strong>13</strong><span>orang</span></div>
-      <div class="stat"><small>Ahli Madya</small><strong>7</strong><span>orang</span></div>
-      <div class="stat"><small>Ahli Utama</small><strong>1</strong><span>orang</span></div>
-    </div>
-    <p style="margin:16px 0 0;color:#666;font-size:12px">
-      Pusat pada data ini merujuk pada <strong>Deputi Bidang Pencegahan</strong>
-      dan tidak dihitung sebagai sebaran geografis DKI Jakarta.
-    </p>
-  </div>
-</section>
 
 <section class="note">
 <div class="kicker">Membaca Data</div>
@@ -219,9 +185,6 @@ function stats(){
  <div class="stat"><small>Ahli Muda</small><strong>${m}</strong><span>jenjang</span></div>
  <div class="stat"><small>Ahli Madya</small><strong>${md}</strong><span>jenjang</span></div>
  <div class="stat"><small>Ahli Utama</small><strong>${u}</strong><span>jenjang</span></div>`;
- document.getElementById('utamaTotal').textContent=u;
- document.getElementById('dkiTotal').textContent=dki ? dki.total : '—';
- document.getElementById('pusatTotal').textContent=pusat ? pusat.total : '—';
 }
 document.getElementById('search').addEventListener('input',draw);
 document.getElementById('level').addEventListener('change',draw);
