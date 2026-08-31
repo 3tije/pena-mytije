@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="TMT — Tanya Mas Tri. Ruang percakapan di PENA.">
-<meta name="version" content="TMT Cloudflare + GAS FINAL v3">
+<meta name="version" content="TMT Cloudflare + GAS FINAL v4">
 <title>TMT — Tanya Mas Tri | PENA</title>
 <style>
 :root{
@@ -56,8 +56,24 @@ h1 span{color:var(--red)}
 .finish .status{font-size:10px;color:#777}.finish button{border:1px solid #111;background:#fff;padding:10px 14px;font-size:9px;font-weight:950;text-transform:uppercase;cursor:pointer}
 .finish button:hover{background:#111;color:#fff}
 .finish-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.feedback-btn{border:1px solid #111;background:#111;color:#fff;padding:10px 14px;font-size:9px;font-weight:950;text-transform:uppercase;cursor:pointer}
-.feedback-btn:hover{background:#333;color:#fff}
+.feedback-btn,
+.feedback-btn:visited,
+.feedback-btn:hover,
+.feedback-btn:focus,
+.feedback-btn:active{
+  border:1px solid #111;
+  background:#111 !important;
+  color:#fff !important;
+  padding:10px 14px;
+  font-size:9px;
+  font-weight:950;
+  text-transform:uppercase;
+  cursor:pointer;
+  opacity:1 !important;
+  -webkit-appearance:none;
+  appearance:none;
+}
+.feedback-btn:hover{background:#222 !important;color:#fff !important}
 .feedback-card{background:#fff;border:1px solid #ddd;margin-top:15px;padding:24px;box-shadow:0 15px 35px #00000010}
 .feedback-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 .feedback-head h3{margin:0;font-size:28px;text-transform:uppercase;letter-spacing:-1px}
@@ -85,6 +101,8 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
   .finish{align-items:stretch;flex-direction:column}.finish-actions{justify-content:stretch}.finish-actions button{flex:1}
   .feedback-grid{grid-template-columns:1fr}.feedback-actions{flex-direction:column}.feedback-cancel,.feedback-send{width:100%}
 }
+
+.feedback-btn::first-letter{color:#fff !important}
 </style>
 </head>
 <body>
