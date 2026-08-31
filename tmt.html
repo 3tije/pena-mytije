@@ -171,7 +171,7 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
 <script>
 const CONFIG={
   API_URL:"https://17fa1998-ed0e-4422-a1f1-919760ff47bb.search.ai.cloudflare.com/chat/completions",
-  GAS_URL:"GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT",
+  GAS_URL:"https://script.google.com/macros/s/AKfycbwyT-cZK615tyCWSfcTXvNANthjyqFRC0dbmwtRxwPQasNXD7qIIimoWhVxvMl26YTsNg/exec",
   SYSTEM_PROMPT:
     "Anda adalah TMT (Tanya Mas Tri), asisten percakapan di PENA. "+
     "Misi utama Anda adalah membantu pengunjung memahami dunia Penyuluh Narkoba berdasarkan sumber yang telah disediakan di Cloudflare AI Search. "+
@@ -235,7 +235,7 @@ async function sendMessage(){
 }
 function openFeedback(){
   if(!session.email||session.finished){toast("Mulai percakapan terlebih dahulu.");return}
-  if(!CONFIG.GAS_URL||CONFIG.GAS_URL.includes("GANTI_DENGAN")){toast("Backend pesan belum dipasang.");return}
+  if(!CONFIG.GAS_URL||CONFIG.GAS_URL.includes("GANTI_DENGAN")){toast("Backend pesan belum terhubung. Periksa GAS_URL di bagian CONFIG.");return}
   document.getElementById("feedbackCard").classList.remove("hidden");
   document.getElementById("feedbackSessionEmail").value=session.email;
   document.getElementById("feedbackStartedAt").value=session.startedAt||"";
@@ -249,7 +249,7 @@ function submitFeedback(e){
   if(feedbackSubmitting){e.preventDefault();return}
   const f=document.getElementById("feedbackForm"),b=document.getElementById("feedbackSend"),s=document.getElementById("feedbackStatus");
   if(!f.checkValidity()){e.preventDefault();f.reportValidity();return}
-  if(!CONFIG.GAS_URL||CONFIG.GAS_URL.includes("GANTI_DENGAN")){e.preventDefault();s.className="feedback-status err";s.textContent="Backend pesan belum dipasang.";return}
+  if(!CONFIG.GAS_URL||CONFIG.GAS_URL.includes("GANTI_DENGAN")){e.preventDefault();s.className="feedback-status err";s.textContent="Backend pesan belum terhubung. Periksa GAS_URL di bagian CONFIG.";return}
   f.action=CONFIG.GAS_URL;feedbackSubmitting=true;b.disabled=true;b.textContent="Mengirim…";s.className="feedback-status";s.textContent="Pesan sedang dikirim kepada Tim Mas Tri.";
   const frame=document.getElementById("feedbackFrame");let done=false;
   const success=()=>{if(done)return;done=true;feedbackSubmitting=false;b.disabled=false;b.textContent="Kirim Pesan →";s.className="feedback-status ok";s.textContent="✓ Pesan telah diterima. Balasan otomatis akan dikirim ke email Anda.";f.reset();document.getElementById("feedbackEmail").value=session.email;toast("Pesan berhasil dikirim.")};
