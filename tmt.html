@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="TMT — Tanya Mas Tri. Ruang percakapan di PENA.">
-<meta name="version" content="TMT Cloudflare + GAS FINAL v1">
+<meta name="version" content="TMT Cloudflare + GAS FINAL v3">
 <title>TMT — Tanya Mas Tri | PENA</title>
 <style>
 :root{
@@ -56,8 +56,8 @@ h1 span{color:var(--red)}
 .finish .status{font-size:10px;color:#777}.finish button{border:1px solid #111;background:#fff;padding:10px 14px;font-size:9px;font-weight:950;text-transform:uppercase;cursor:pointer}
 .finish button:hover{background:#111;color:#fff}
 .finish-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.feedback-btn{border:1px solid var(--red);background:var(--red);color:#fff;padding:10px 14px;font-size:9px;font-weight:950;text-transform:uppercase;cursor:pointer}
-.feedback-btn:hover{background:var(--red2)}
+.feedback-btn{border:1px solid #111;background:#111;color:#fff;padding:10px 14px;font-size:9px;font-weight:950;text-transform:uppercase;cursor:pointer}
+.feedback-btn:hover{background:#333;color:#fff}
 .feedback-card{background:#fff;border:1px solid #ddd;margin-top:15px;padding:24px;box-shadow:0 15px 35px #00000010}
 .feedback-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 .feedback-head h3{margin:0;font-size:28px;text-transform:uppercase;letter-spacing:-1px}
@@ -200,7 +200,11 @@ function startSession(){
 function topic(t){if(session.finished)return;const q=document.getElementById("question");q.value=t+": ";q.focus()}
 function enterSend(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}}
 function addMessage(text,who){const d=document.createElement("div");d.className="msg "+who;d.textContent=text;document.getElementById("messages").appendChild(d);scrollChat();return d}
-function addUser(t){return addMessage(t,"user")}function addBot(t){return addMessage(t,"bot")}
+function cleanAnswerText(t){
+  return String(t||"").replace(/\\*\\*/g,"").replace(/\\*/g,"");
+}
+function addUser(t){return addMessage(t,"user")}
+function addBot(t){return addMessage(cleanAnswerText(t),"bot")}
 function addThinking(){return addMessage("Mas Tri sedang menyiapkan jawaban…","bot")}
 function scrollChat(){const m=document.getElementById("messages");m.scrollTop=m.scrollHeight}
 function extractAnswer(data){return data?.choices?.[0]?.message?.content||data?.result?.response||data?.answer||data?.response||""}
@@ -225,7 +229,7 @@ async function sendMessage(){
     const raw=await r.text();let data={};try{data=raw?JSON.parse(raw):{}}catch(e){throw new Error("Respons Cloudflare bukan JSON.")}
     if(!r.ok)throw new Error(String(data?.error?.message||data?.error||data?.message||("HTTP "+r.status)));
     const answer=extractAnswer(data);if(!answer)throw new Error("Teks jawaban tidak ditemukan.");
-    thinking.remove();conversation.push({role:"assistant",content:answer});addBot(answer);addSources(data?.chunks||[]);
+    thinking.remove();const cleanAnswer=cleanAnswerText(answer);conversation.push({role:"assistant",content:cleanAnswer});addBot(cleanAnswer);addSources(data?.chunks||[]);
     document.getElementById("chatStatus").textContent="Percakapan sedang berlangsung.";
   }catch(e){
     thinking.remove();addBot("Maaf bro, TMT belum bisa mendapatkan jawaban dari Cloudflare AI Search.\n\nSilakan coba lagi.");
