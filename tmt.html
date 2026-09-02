@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Tanya Om Tije — ruang percakapan tentang Penyuluh Narkoba di PENA.">
-<meta name="version" content="TOT Tanya Om Tije Data FINAL">
+<meta name="version" content="TOT Tanya Om Tije Cloudflare FINAL">
 <title>Tanya Om Tije | PENA</title>
 <style>
 :root{
@@ -104,6 +104,20 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
 .tmt-title-row img{width:78px;height:78px;object-fit:contain;flex:0 0 auto}
 .tmt-title-row h2{margin:0}
 @media(max-width:600px){.tmt-title-row{gap:10px}.tmt-title-row img{width:60px;height:60px}}
+
+.tot-identity{background:#fff;border:1px solid #ddd;padding:18px;margin-bottom:14px}
+.tot-identity-title{font-size:18px;font-weight:950;letter-spacing:-.4px;margin:2px 0 7px}
+.tot-identity-sub{font-size:10px;color:#666;line-height:1.55;margin-bottom:13px}
+.tot-identity-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tot-identity label{display:block;font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
+.tot-identity input{width:100%;box-sizing:border-box;border:1px solid #bbb;background:#fafafa;padding:10px 11px;font-size:12px;outline:none}
+.tot-identity input:focus{border-color:var(--red);background:#fff}
+.tot-identity-btn{margin-top:12px;border:0;background:var(--red);color:#fff;padding:11px 16px;font-size:10px;font-weight:950;text-transform:uppercase;cursor:pointer}
+.tot-identity-btn:hover{background:var(--red2)}
+.tot-skipwrap{margin-top:8px}.tot-skip{background:none;border:0;padding:0;color:#666;text-decoration:underline;font-size:9px;cursor:pointer}.tot-identity-note{font-size:9px;color:#777;line-height:1.5;margin-top:9px}
+.tot-sessionbar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#111;color:#fff;padding:8px 11px;margin-bottom:10px;font-size:9px}
+.tot-sessionbar strong{font-size:10px}.tot-sessionbar span{color:#aaa}
+@media(max-width:600px){.tot-identity-grid{grid-template-columns:1fr}.tot-identity-btn{width:100%}.tot-sessionbar{display:block!important}.tot-sessionbar span{display:block;margin-top:3px}}
 </style>
 </head>
 <body>
@@ -150,7 +164,35 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
       <p>Langsung tuliskan pertanyaan Anda. Tidak perlu memasukkan email untuk memulai.</p>
     </div>
 
-    <div class="card" id="chatCard">
+    <div class="tot-identity" id="totIdentity">
+      <div class="kicker">TANYA OM TIJE</div>
+      <div class="tot-identity-title">Boleh tahu siapa yang bertanya?</div>
+      <div class="tot-identity-sub">
+        Nama/panggilan membantu kami memahami kebutuhan Penyuluh. Email tidak wajib.
+        Jika dikosongkan, percakapan tetap dicatat sebagai anonim.
+      </div>
+      <div class="tot-identity-grid">
+        <div>
+          <label for="visitorName">Nama / Panggilan</label>
+          <input id="visitorName" type="text" maxlength="80" autocomplete="name" placeholder="Contoh: Andi">
+        </div>
+        <div>
+          <label for="visitorEmail">Email (opsional)</label>
+          <input id="visitorEmail" type="email" maxlength="120" autocomplete="email" placeholder="nama@email.com">
+        </div>
+      </div>
+      <button type="button" class="tot-identity-btn" onclick="startTotSession()">Mulai Percakapan →</button>
+      <div class="tot-skipwrap"><button type="button" class="tot-skip" onclick="startTotSession()">Lanjut sebagai anonim</button></div>
+      <div class="tot-identity-note">
+        Kami mencatat waktu, pertanyaan, kategori, dan sumber untuk analisis kebutuhan Penyuluh.
+        Tidak ada ketikan yang direkam sebelum tombol Kirim ditekan.
+      </div>
+    </div>
+
+    <div class="card" id="chatCard"><div class="tot-sessionbar" id="totSessionBar" style="display:none">
+        <strong id="totSessionName">Pengunjung — Anonim</strong>
+        <span id="totSessionId"></span>
+      </div>
       <div class="session">TOT · <b>Tanya Om Tije</b> · Ruang percakapan terbuka.</div>
 
       <div style="text-align:center;margin:4px 0 10px;font-size:11px;font-weight:800;color:#555">
@@ -253,6 +295,7 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
 const CONFIG={
   API_URL:"https://17fa1998-ed0e-4422-a1f1-919760ff47bb.search.ai.cloudflare.com/chat/completions",
   GAS_URL:"https://script.google.com/macros/s/AKfycbwH3Bdyuysy8v9RPvz6WTeRT8S1pm49MDc49kMH83P7WEFkXxeP4jjjweRDXxPZIEbbHQ/exec",
+  LOG_URL:"https://script.google.com/macros/s/AKfycbzPo429yLIijVNMF-_26EnROtk30wMbtV_gbTXOLHqQHVcNQAtJjH_32Mk_DkTjc2M/exec",
   SYSTEM_PROMPT:
     "Anda adalah TOT (Tanya Om Tije), asisten percakapan di PENA. "+
     "Misi utama Anda adalah membantu pengunjung memahami dunia Penyuluh Narkoba dengan menggunakan sumber yang telah disediakan di Cloudflare AI Search sebagai dasar pengetahuan. "+
@@ -302,6 +345,113 @@ const SOURCE_MAP={
 };
 
 let session={startedAt:new Date().toISOString(),finished:false};
+let totVisitor={
+  id:"TOT-"+new Date().toISOString().replace(/\D/g,"").slice(0,14)+"-"+Math.random().toString(36).slice(2,6).toUpperCase(),
+  name:"Pengunjung — Anonim",
+  email:"",
+  questionNo:0,
+  started:false
+};
+
+function logTot(payload){
+  if(!CONFIG.LOG_URL || CONFIG.LOG_URL.includes("PASTE_URL_GAS_LOG_DI_SINI")) return;
+  try{
+    const body=new URLSearchParams();
+    Object.entries(payload||{}).forEach(([k,v])=>body.append(k,String(v??"")));
+    fetch(CONFIG.LOG_URL,{method:"POST",mode:"no-cors",body,keepalive:true}).catch(()=>{});
+  }catch(e){}
+}
+
+function startTotSession(){
+  const name=(document.getElementById("visitorName")?.value||"").trim();
+  const email=(document.getElementById("visitorEmail")?.value||"").trim();
+  totVisitor.name=name||"Pengunjung — Anonim";
+  totVisitor.email=email;
+  totVisitor.started=true;
+
+  const identity=document.getElementById("totIdentity");
+  if(identity)identity.style.display="none";
+
+  const bar=document.getElementById("totSessionBar");
+  if(bar)bar.style.display="flex";
+  const n=document.getElementById("totSessionName");
+  const id=document.getElementById("totSessionId");
+  if(n)n.textContent=totVisitor.name;
+  if(id)id.textContent=totVisitor.id;
+
+  logTot({
+    action:"session_start",
+    sessionId:totVisitor.id,
+    startedAt:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    sourceUrl:location.href
+  });
+
+  document.getElementById("question")?.focus();
+}
+
+function classifyTotQuestion(q){
+  const s=String(q||"").toLowerCase();
+  const rules=[
+    [/tuna netra|disabil|difabel|aksesibil|tuli|netra/,"Disabilitas & Inklusivitas"],
+    [/anak|paud|sd\b|smp\b|sekolah/,"Anak & Pendidikan"],
+    [/remaja|gen z|sma\b|pelajar/,"Remaja"],
+    [/komunikasi|bicara|berbicara|dialog|public speaking|mendengar/,"Komunikasi Penyuluhan"],
+    [/penyuluhan|penyuluh|fasilitator|metode|teknik|peserta|audience/,"Teknik Penyuluhan"],
+    [/kompetensi|uji kompetensi|pelatihan|diklat/,"Kompetensi"],
+    [/angka kredit|kenaikan pangkat|pangkat|jabatan fungsional/,"Karier & Kepegawaian"],
+    [/perka|permen|perpres|peraturan|surat edaran|kepka|regulasi|aturan/,"Regulasi"],
+    [/terluar|terpencil|perbatasan|pedalaman|wilayah/,"Wilayah & Lapangan"],
+    [/narkoba|narkotika|psikotropika|pencegahan|p4gn|rehabilitasi/,"P4GN & Narkoba"]
+  ];
+  for(const [rx,label] of rules)if(rx.test(s))return label;
+  return "Lainnya";
+}
+
+function logTotQuestion(question,chunks){
+  if(!totVisitor.started)return;
+  totVisitor.questionNo++;
+  const sources=[];
+  (Array.isArray(chunks)?chunks:[]).forEach(c=>{
+    const candidates=[
+      c?.item?.key,c?.item?.filename,c?.item?.name,c?.filename,c?.name,c?.source,
+      c?.metadata?.filename,c?.metadata?.name,c?.metadata?.source
+    ];
+    for(const raw of candidates){
+      const display=getDisplaySourceName(raw);
+      if(display && !sources.includes(display)){sources.push(display);break;}
+    }
+  });
+
+  logTot({
+    action:"chat_log",
+    sessionId:totVisitor.id,
+    timestamp:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    questionNo:totVisitor.questionNo,
+    question:question,
+    category:classifyTotQuestion(question),
+    sources:sources.slice(0,8).join(" | "),
+    sourceUrl:location.href
+  });
+}
+
+function logTotEnd(){
+  if(!totVisitor.started)return;
+  logTot({
+    action:"session_end",
+    sessionId:totVisitor.id,
+    endedAt:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    questionCount:totVisitor.questionNo,
+    sourceUrl:location.href
+  });
+}
+
+
 let conversation=[];
 
 function resetConversation(){
@@ -442,6 +592,7 @@ async function sendMessage(){
   const q=input.value.trim();
 
   if(!q||session.finished||btn.disabled)return;
+  if(!totVisitor.started)startTotSession();
 
   addUser(q);
   input.value="";
@@ -487,11 +638,12 @@ async function sendMessage(){
     conversation.push({role:"assistant",content:cleanAnswer});
     addBot(cleanAnswer);
     addSources(data?.chunks||[]);
+    logTotQuestion(q,data?.chunks||[]);
 
     document.getElementById("chatStatus").textContent="Percakapan sedang berlangsung.";
   }catch(e){
     thinking.remove();
-    addBot("Maaf bro, TOT belum bisa mendapatkan jawaban dari sumber yang ada.\n\nSilakan coba lagi.");
+    addBot("Maaf bro, TOT belum bisa mendapatkan jawaban dari Cloudflare AI Search.\n\nSilakan coba lagi.");
     document.getElementById("chatStatus").textContent="Koneksi gagal — silakan coba lagi.";
     console.error(e);
   }finally{
@@ -597,6 +749,7 @@ function finishSession(){
   if(!confirm("Akhiri percakapan sekarang?"))return;
 
   session.finished=true;
+  logTotEnd();
   document.getElementById("chatStatus").textContent=
     "Percakapan selesai. Terima kasih sudah berkunjung ke PENA.";
   document.getElementById("question").disabled=true;
