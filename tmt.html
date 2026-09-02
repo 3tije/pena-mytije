@@ -358,11 +358,46 @@ function logTot(payload){
   try{
     const body=new URLSearchParams();
     Object.entries(payload||{}).forEach(([k,v])=>body.append(k,String(v??"")));
-    fetch(CONFIG.LOG_URL,{method:"POST",mode:"no-cors",body,keepalive:true}).catch(()=>{});
-  }catch(e){}
+    fetch(CONFIG.LOG_URL,{
+      method:"POST",
+      mode:"no-cors",
+      body:body,
+      keepalive:true,
+      credentials:"omit"
+    }).catch(()=>{});
+  }catch(e){
+    console.warn("TOT log:",e);
+  }
 }
 
 function startTotSession(){
+  const name=(document.getElementById("visitorName")?.value||"").trim();
+  const email=(document.getElementById("visitorEmail")?.value||"").trim();
+  totVisitor.name=name||"Pengunjung — Anonim";
+  totVisitor.email=email;
+  totVisitor.started=true;
+
+  const identity=document.getElementById("totIdentity");
+  if(identity)identity.style.display="none";
+
+  const bar=document.getElementById("totSessionBar");
+  if(bar)bar.style.display="flex";
+  const n=document.getElementById("totSessionName");
+  const id=document.getElementById("totSessionId");
+  if(n)n.textContent=totVisitor.name;
+  if(id)id.textContent=totVisitor.id;
+
+  logTot({
+    action:"session_start",
+    sessionId:totVisitor.id,
+    startedAt:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    sourceUrl:location.href
+  });
+
+  document.getElementById("question")?.focus();
+}function startTotSession(){
   const name=(document.getElementById("visitorName")?.value||"").trim();
   const email=(document.getElementById("visitorEmail")?.value||"").trim();
   totVisitor.name=name||"Pengunjung — Anonim";
@@ -409,9 +444,41 @@ function classifyTotQuestion(q){
   return "Lainnya";
 }
 
-function logTotQuestion(question,chunks){
+function logTotQuestion(question){
   if(!totVisitor.started)return;
   totVisitor.questionNo++;
+
+  logTot({
+    action:"chat_log",
+    sessionId:totVisitor.id,
+    timestamp:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    questionNo:totVisitor.questionNo,
+    question:question,
+    category:classifyTotQuestion(question),
+    sources:"",
+    sourceUrl:location.href
+  });
+
+  // Transkrip pengunjung: disimpan terpisah agar alur percakapan dapat dibaca utuh.
+  logTot({
+    action:"transcript",
+    sessionId:totVisitor.id,
+    timestamp:new Date().toISOString(),
+    name:totVisitor.name,
+    email:totVisitor.email,
+    questionNo:totVisitor.questionNo,
+    speaker:"Pengunjung",
+    message:question,
+    category:classifyTotQuestion(question),
+    sourceUrl:location.href
+  });
+}
+
+function logTotAnswer(answer,chunks){
+  if(!totVisitor.started)return;
+
   const sources=[];
   (Array.isArray(chunks)?chunks:[]).forEach(c=>{
     const candidates=[
@@ -425,14 +492,15 @@ function logTotQuestion(question,chunks){
   });
 
   logTot({
-    action:"chat_log",
+    action:"transcript",
     sessionId:totVisitor.id,
     timestamp:new Date().toISOString(),
     name:totVisitor.name,
     email:totVisitor.email,
     questionNo:totVisitor.questionNo,
-    question:question,
-    category:classifyTotQuestion(question),
+    speaker:"Om Tije",
+    message:answer,
+    category:classifyTotQuestion(document.querySelectorAll(".msg.user")[document.querySelectorAll(".msg.user").length-1]?.textContent||""),
     sources:sources.slice(0,8).join(" | "),
     sourceUrl:location.href
   });
@@ -594,6 +662,9 @@ async function sendMessage(){
   if(!q||session.finished||btn.disabled)return;
   if(!totVisitor.started)startTotSession();
 
+  // Catat pertanyaan SEBELUM memanggil AI agar pertanyaan tetap tercatat
+  // walaupun respons AI gagal atau browser menutup halaman.
+  logTotQuestion(q);
   addUser(q);
   input.value="";
   btn.disabled=true;
@@ -638,7 +709,7 @@ async function sendMessage(){
     conversation.push({role:"assistant",content:cleanAnswer});
     addBot(cleanAnswer);
     addSources(data?.chunks||[]);
-    logTotQuestion(q,data?.chunks||[]);
+    logTotAnswer(cleanAnswer,data?.chunks||[]);
 
     document.getElementById("chatStatus").textContent="Percakapan sedang berlangsung.";
   }catch(e){
