@@ -161,7 +161,7 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
         <img src="assets/tanya-om-tije-badge-transparent-v2.png" alt="Badge Tanya Om Tije">
         <h2>Tanya Om Tije</h2>
       </div>
-      <p>Langsung tuliskan pertanyaan Anda. Tidak perlu memasukkan email untuk memulai.</p>
+      <p>Sebelum mulai, boleh tahu nama atau panggilan Anda? Email bersifat opsional.</p>
     </div>
 
     <div class="tot-identity" id="totIdentity">
@@ -189,7 +189,7 @@ footer{background:#060709;color:#777;padding:22px 20px;text-align:center;font-si
       </div>
     </div>
 
-    <div class="card" id="chatCard"><div class="tot-sessionbar" id="totSessionBar" style="display:none">
+    <div class="card hidden" id="chatCard"><div class="tot-sessionbar" id="totSessionBar" style="display:none">
         <strong id="totSessionName">Pengunjung — Anonim</strong>
         <span id="totSessionId"></span>
       </div>
@@ -373,6 +373,7 @@ function logTot(payload){
 function startTotSession(){
   const name=(document.getElementById("visitorName")?.value||"").trim();
   const email=(document.getElementById("visitorEmail")?.value||"").trim();
+
   totVisitor.name=name||"Pengunjung — Anonim";
   totVisitor.email=email;
   totVisitor.started=true;
@@ -380,35 +381,12 @@ function startTotSession(){
   const identity=document.getElementById("totIdentity");
   if(identity)identity.style.display="none";
 
-  const bar=document.getElementById("totSessionBar");
-  if(bar)bar.style.display="flex";
-  const n=document.getElementById("totSessionName");
-  const id=document.getElementById("totSessionId");
-  if(n)n.textContent=totVisitor.name;
-  if(id)id.textContent=totVisitor.id;
-
-  logTot({
-    action:"session_start",
-    sessionId:totVisitor.id,
-    startedAt:new Date().toISOString(),
-    name:totVisitor.name,
-    email:totVisitor.email,
-    sourceUrl:location.href
-  });
-
-  document.getElementById("question")?.focus();
-}function startTotSession(){
-  const name=(document.getElementById("visitorName")?.value||"").trim();
-  const email=(document.getElementById("visitorEmail")?.value||"").trim();
-  totVisitor.name=name||"Pengunjung — Anonim";
-  totVisitor.email=email;
-  totVisitor.started=true;
-
-  const identity=document.getElementById("totIdentity");
-  if(identity)identity.style.display="none";
+  const chatCard=document.getElementById("chatCard");
+  if(chatCard)chatCard.classList.remove("hidden");
 
   const bar=document.getElementById("totSessionBar");
   if(bar)bar.style.display="flex";
+
   const n=document.getElementById("totSessionName");
   const id=document.getElementById("totSessionId");
   if(n)n.textContent=totVisitor.name;
@@ -837,7 +815,6 @@ function toast(t){
 
 document.getElementById("year").textContent=new Date().getFullYear();
 resetConversation();
-document.getElementById("question").focus();
 </script>
 </body>
 </html>
