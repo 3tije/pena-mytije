@@ -406,10 +406,29 @@
     }
     .feature.dark{background:#11151a}
     .feature.red{background:var(--red)}
+    /* JEJAK SEJARAH — kartu terang harus tetap terbaca di atas paper */
+    .feature.light{
+      background:#ffffff;
+      color:#111318;
+      border:1px solid #d7d9dc;
+      box-shadow:0 10px 28px rgba(0,0,0,.06);
+    }
+    .feature.light h3{color:#111318}
+    .feature.light p{color:#5f646b}
+    .feature.light .section-kicker{color:var(--red)}
     .feature h3{font-size:31px;line-height:1;margin-bottom:15px;text-transform:uppercase}
     .feature p{max-width:460px;color:#d5d5d5;font-size:14px}
     .feature.red p{color:#fff}
     .feature .btn{margin-top:25px;border-color:#fff;background:transparent}
+    .feature.light .btn{
+      color:#111318;
+      border-color:#111318;
+      background:transparent;
+    }
+    .feature.light .btn:hover{
+      background:#111318;
+      color:#fff;
+    }
     .feature .btn:hover{background:#fff;color:#111}
     .feature-mark{
       position:absolute;
