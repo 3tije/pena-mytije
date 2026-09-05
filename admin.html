@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PENA Admin — Jejak</title>
+<style>
+:root{--red:#d71920;--ink:#0b0d10;--paper:#f4f4f1;--white:#fff;--line:#ddd;--muted:#6d7076}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--paper);color:var(--ink)}
+header{background:#090a0c;color:#fff;padding:22px}.bar{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{font-size:28px;font-weight:950;letter-spacing:5px}.brand span{color:var(--red)}header a{color:#ddd;font-size:12px;font-weight:800}
+main{max-width:1050px;margin:auto;padding:40px 20px}.head{margin-bottom:28px}.kicker{font-size:11px;color:var(--red);letter-spacing:2px;font-weight:900;text-transform:uppercase}.head h1{font-size:44px;margin:5px 0 8px;letter-spacing:-2px}.head p{color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);padding:25px;margin-bottom:20px}.panel h2{margin:0 0 18px;font-size:21px}.notice{background:#fff4f4;border-left:4px solid var(--red);padding:14px;margin-bottom:20px;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.field.full{grid-column:1/-1}label{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px}input,textarea,select{font:inherit;border:1px solid #cfcfcf;padding:11px;background:#fff}textarea{min-height:130px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;padding:12px 16px;background:var(--red);color:#fff;font-weight:900;cursor:pointer}.btn.secondary{background:#15181d}.btn.light{background:#eee;color:#111}.list{margin-top:20px;border-top:1px solid var(--line)}.item{display:flex;justify-content:space-between;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}.item strong{display:block}.item small{color:var(--muted)}.item button{border:0;background:#eee;padding:7px 10px;cursor:pointer}
+.status{display:inline-block;font-size:10px;font-weight:900;padding:4px 7px;background:#eee;margin-left:8px}.published{background:#e6f4e8}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.head h1{font-size:36px}}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="brand">PE<span>N</span>A ADMIN</div><a href="index.html">← Lihat Website</a></div></header>
+<main>
+  <div class="head">
+    <div class="kicker">Content Management • v1</div>
+    <h1>Kelola Jejak</h1>
+    <p>Ruang kurasi untuk sejarah, dokumentasi, dan artefak PENA.</p>
+  </div>
+
+  <div class="notice">
+    <strong>Penting:</strong> versi ini adalah <strong>editor lokal</strong> untuk fondasi CMS.
+    Data tersimpan di browser dan dapat diekspor. Ini <strong>bukan sistem login/cloud production</strong>.
+    Untuk publikasi bersama, tahap berikutnya dapat dihubungkan ke Google Apps Script + Google Sheets.
+  </div>
+
+  <section class="panel">
+    <h2>Tambah / Edit Jejak</h2>
+    <div class="grid">
+      <div class="field"><label>Judul</label><input id="title" placeholder="Contoh: Tugu Narkoba Bogor"></div>
+      <div class="field"><label>Kategori</label><select id="category"><option>Sejarah</option><option>Tokoh</option><option>Dokumentasi</option><option>Gagasan</option><option>Arsip P4GN</option></select></div>
+      <div class="field"><label>Tahun / Periode</label><input id="year" placeholder="1986"></div>
+      <div class="field"><label>Lokasi</label><input id="location" placeholder="Kedung Halang, Bogor"></div>
+      <div class="field full"><label>Ringkasan</label><textarea id="summary" placeholder="Ringkasan singkat untuk kartu arsip..."></textarea></div>
+      <div class="field full"><label>Isi / Catatan Arsip</label><textarea id="body" placeholder="Tulis narasi lengkap, fakta, konteks, dan catatan PENA..."></textarea></div>
+      <div class="field"><label>Sumber</label><input id="source" placeholder="ANTARA, arsip pribadi, wawancara, dll."></div>
+      <div class="field"><label>Status</label><select id="status"><option value="draft">Draft</option><option value="published">Terbit</option></select></div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="saveItem()">Simpan</button>
+      <button class="btn light" onclick="resetForm()">Bersihkan</button>
+      <button class="btn secondary" onclick="exportJSON()">Ekspor JSON</button>
+      <button class="btn light" onclick="importJSON()">Impor JSON</button>
+    </div>
+    <input id="file" type="file" accept=".json" hidden onchange="readJSON(event)">
+  </section>
+
+  <section class="panel">
+    <h2>Arsip Tersimpan <span class="status" id="count">0</span></h2>
+    <div id="list" class="list"></div>
+  </section>
+</main>
+<script>
+let data=JSON.parse(localStorage.getItem('penaJejak')||'[]'), editId=null;
+const $=id=>document.getElementById(id);
+function saveItem(){
+  const item={id:editId||Date.now(),title:$('title').value.trim(),category:$('category').value,year:$('year').value.trim(),location:$('location').value.trim(),summary:$('summary').value.trim(),body:$('body').value.trim(),source:$('source').value.trim(),status:$('status').value,updatedAt:new Date().toISOString()};
+  if(!item.title){alert('Judul wajib diisi.');return}
+  const i=data.findIndex(x=>x.id===item.id); if(i>=0)data[i]=item; else data.unshift(item);
+  localStorage.setItem('penaJejak',JSON.stringify(data)); resetForm(); render();
+}
+function editItem(id){const x=data.find(v=>v.id===id);if(!x)return;editId=id;['title','year','location','summary','body','source','category','status'].forEach(k=>$(k).value=x[k]||'');scrollTo({top:0,behavior:'smooth'})}
+function deleteItem(id){if(confirm('Hapus arsip ini?')){data=data.filter(x=>x.id!==id);localStorage.setItem('penaJejak',JSON.stringify(data));render()}}
+function resetForm(){editId=null;['title','year','location','summary','body','source'].forEach(k=>$(k).value='');$('category').value='Sejarah';$('status').value='draft'}
+function render(){ $('count').textContent=data.length; $('list').innerHTML=data.length?data.map(x=>`<div class="item"><div><strong>${esc(x.title)} <span class="status ${x.status==='published'?'published':''}">${x.status}</span></strong><small>${esc(x.category)} · ${esc(x.year||'—')} · ${esc(x.location||'—')}</small></div><div><button onclick="editItem(${x.id})">Edit</button> <button onclick="deleteItem(${x.id})">Hapus</button></div></div>`).join(''):'<p style="color:#777">Belum ada arsip. Tambahkan jejak pertama.</p>'}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function exportJSON(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pena-jejak.json';a.click();URL.revokeObjectURL(a.href)}
+function importJSON(){$('file').click()}
+function readJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;data=x;localStorage.setItem('penaJejak',JSON.stringify(data));render();alert('Impor berhasil.')}catch{alert('File JSON tidak valid.')}};r.readAsText(f)}
+render();
+</script>
+</body>
+</html>
