@@ -2,73 +2,214 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Jejak PENA — Tugu Narkoba Bogor. Monumen dan jejak perjuangan antinarkoba.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PENA — Jejak Sejarah Tugu Narkoba Bogor.">
 <title>Tugu Narkoba Bogor — Jejak PENA</title>
 <style>
-:root{--red:#d71920;--dark:#080a0d;--ink:#111318;--paper:#f3f3f0;--muted:#6c7076;--line:#dedede;--max:1180px}
+:root{
+  --red:#d71920;
+  --red2:#ef343b;
+  --black:#090b0e;
+  --ink:#111318;
+  --paper:#f4f4f1;
+  --white:#fff;
+  --muted:#6d7178;
+  --line:#dedede;
+  --max:1180px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65}
 a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%}
 
-/* NAV */
-.navbar{height:76px;background:#0b0d10;color:#fff;border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:50}
-.nav-in{max-width:var(--max);height:100%;margin:auto;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:25px}
-.logo{font-size:31px;font-weight:950;letter-spacing:6px}.logo i{color:var(--red);font-style:normal}
-.navlinks{display:flex;gap:27px}.navlinks a{font-size:11px;font-weight:900;letter-spacing:.8px;color:#ddd;text-transform:uppercase;padding:29px 0;position:relative}.navlinks a.active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--red)}
-.back{font-size:11px;font-weight:900;letter-spacing:.8px;color:#ccc}
+/* HEADER */
+.header{
+  height:76px;background:rgba(8,10,12,.97);color:#fff;
+  position:sticky;top:0;z-index:100;border-bottom:1px solid #24272b
+}
+.header-in{
+  max-width:var(--max);height:100%;margin:auto;padding:0 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:25px
+}
+.logo{font-size:31px;font-weight:950;letter-spacing:6px}
+.logo span{color:var(--red)}
+.nav{display:flex;gap:27px;align-items:center}
+.nav a{
+  font-size:11px;font-weight:900;letter-spacing:.7px;
+  color:#d8d8d8;text-transform:uppercase;padding:29px 0;position:relative
+}
+.nav a.active{color:#fff}
+.nav a.active:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--red)
+}
+.back{font-size:11px;font-weight:900;letter-spacing:.7px;color:#ccc;text-transform:uppercase}
 
-/* HERO */
-.hero{background:var(--dark);color:#fff;overflow:hidden}
-.hero-in{max-width:var(--max);margin:auto;min-height:720px;display:grid;grid-template-columns:.9fr 1.1fr;position:relative}
-.hero-copy{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:70px 22px}
-.crumb{font-size:11px;color:#bbb;margin-bottom:48px}.crumb span{color:#fff}.kicker{color:#f0444a;font-size:12px;font-weight:950;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:14px}
-h1{font-size:clamp(54px,7vw,92px);line-height:.86;letter-spacing:-4px;text-transform:uppercase;margin-bottom:26px}
-h1 .white{color:#fff}h1 .red{color:var(--red)}
-.hero-copy .rule{width:88px;height:5px;background:var(--red);margin-bottom:24px}
-.hero-copy .lead{font-size:20px;color:#d8d8d8;max-width:500px;line-height:1.45}
-.hero-copy .mini{font-size:14px;color:#bfc2c7;max-width:500px;margin-top:20px}
-.cta{display:inline-flex;align-items:center;width:max-content;margin-top:28px;background:var(--red);color:#fff;padding:13px 20px;font-size:11px;font-weight:950;letter-spacing:.5px;text-transform:uppercase;border-radius:2px}
-.hero-visual{position:relative;min-height:720px;overflow:hidden;background:#15171a;display:flex;align-items:center;justify-content:center}
-.hero-visual img{width:100%;height:100%;object-fit:contain;object-position:center center}
-.hero-visual:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#080a0d 0%,rgba(8,10,13,.62) 13%,rgba(8,10,13,0) 38%,rgba(8,10,13,0) 88%,rgba(8,10,13,.24) 100%)}
-.visual-label{position:absolute;z-index:4;right:20px;bottom:20px;background:rgba(8,10,13,.88);border:1px solid rgba(255,255,255,.2);padding:10px 13px;color:#fff;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase}
+/* HERO — monument is the subject */
+.hero{
+  background:var(--black);color:#fff;overflow:hidden;
+  min-height:735px
+}
+.hero-in{
+  max-width:var(--max);min-height:735px;margin:auto;
+  display:grid;grid-template-columns:44% 56%;
+}
+.hero-copy{
+  padding:42px 30px 65px 22px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;z-index:3
+}
+.crumb{font-size:10px;color:#8e939a;margin-bottom:48px}
+.crumb b{color:#fff}
+.kicker{
+  font-size:12px;color:var(--red2);font-weight:950;
+  letter-spacing:2.8px;text-transform:uppercase;margin-bottom:14px
+}
+h1{
+  font-size:clamp(55px,6.6vw,90px);line-height:.86;
+  letter-spacing:-4px;text-transform:uppercase;margin-bottom:26px
+}
+h1 .white{color:#fff}
+h1 .red{color:var(--red)}
+.hero-rule{width:88px;height:5px;background:var(--red);margin-bottom:23px}
+.hero-lead{
+  color:#d9dbde;font-size:20px;line-height:1.42;max-width:450px
+}
+.hero-note{
+  color:#aeb2b7;font-size:14px;line-height:1.55;
+  max-width:455px;margin-top:17px
+}
+.cta{
+  width:max-content;margin-top:27px;padding:13px 20px;
+  background:var(--red);color:#fff;font-size:11px;
+  font-weight:950;text-transform:uppercase;letter-spacing:.5px
+}
+.hero-photo{
+  position:relative;min-height:735px;overflow:hidden;
+  background:#101318;display:flex;align-items:center;justify-content:center
+}
+.hero-photo img{
+  width:100%;height:100%;object-fit:contain;
+  object-position:center center
+}
+.hero-photo:before{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,#090b0e 0%,rgba(9,11,14,.72) 5%,rgba(9,11,14,0) 23%,rgba(9,11,14,0) 100%)
+}
+.hero-photo:after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(0deg,rgba(0,0,0,.2),transparent 25%,transparent 75%,rgba(0,0,0,.08))
+}
+.photo-tag{
+  position:absolute;right:22px;bottom:22px;z-index:4;
+  padding:9px 12px;background:rgba(8,10,12,.86);
+  border:1px solid rgba(255,255,255,.2);font-size:10px;
+  font-weight:900;letter-spacing:1px;text-transform:uppercase
+}
 
-/* FACTS */
-.facts{max-width:1080px;margin:-45px auto 0;position:relative;z-index:5;background:#11151a;color:#fff;border:1px solid #333;border-radius:12px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 20px 40px rgba(0,0,0,.22)}
-.fact{padding:23px 18px;border-right:1px solid #34383d}.fact:last-child{border:0}.fact b{display:block;color:#fff;font-size:18px;line-height:1.15}.fact small{color:#aeb2b7;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+/* FACT STRIP */
+.facts{
+  max-width:1080px;margin:-45px auto 0;position:relative;z-index:8;
+  background:#11151a;border:1px solid #333;color:#fff;
+  border-radius:11px;box-shadow:0 20px 45px rgba(0,0,0,.23);
+  display:grid;grid-template-columns:repeat(4,1fr)
+}
+.fact{padding:22px 20px;border-right:1px solid #34383d}
+.fact:last-child{border-right:0}
+.fact strong{display:block;font-size:18px;line-height:1.2}
+.fact small{display:block;color:#aeb2b8;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px}
 
 /* STORY */
-.section{max-width:var(--max);margin:auto;padding:80px 22px}
-.story{display:grid;grid-template-columns:1.2fr .8fr;gap:65px;align-items:start}
-.section-kicker{font-size:11px;color:var(--red);font-weight:950;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
-h2{font-size:clamp(35px,4.5vw,56px);line-height:.98;letter-spacing:-2px;text-transform:uppercase;margin-bottom:22px}
-.story p{font-size:17px;color:#444;max-width:720px;margin-bottom:17px}
-.quote{background:#fff;padding:32px;border-top:5px solid var(--red);font-size:25px;font-weight:900;line-height:1.22;box-shadow:0 12px 30px rgba(0,0,0,.06)}
-.quote small{display:block;font-size:10px;letter-spacing:1.5px;color:#999;text-transform:uppercase;margin-top:20px}
+.section{max-width:var(--max);margin:auto;padding:82px 22px}
+.story{display:grid;grid-template-columns:1.15fr .85fr;gap:70px}
+.section-kicker{
+  color:var(--red);font-size:11px;font-weight:950;
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px
+}
+h2{font-size:clamp(36px,4.5vw,57px);line-height:.96;letter-spacing:-2px;text-transform:uppercase;margin-bottom:22px}
+.story p{font-size:17px;color:#444;margin-bottom:17px;max-width:700px}
+.quote{
+  background:#fff;border-top:5px solid var(--red);
+  padding:31px 30px;font-size:25px;line-height:1.25;
+  font-weight:900;box-shadow:0 12px 32px rgba(0,0,0,.07)
+}
+.quote small{
+  display:block;margin-top:19px;color:#999;font-size:9px;
+  letter-spacing:1.6px;text-transform:uppercase
+}
 
-/* HISTORY */
-.history{background:#111318;color:#fff}
-.history-in{max-width:var(--max);margin:auto;padding:75px 22px}
-.history-grid{display:grid;grid-template-columns:1fr 1fr;gap:65px}
-.history h2{color:#fff}.history p{color:#c8c9cc;font-size:16px}.timeline{border-left:2px solid #333;padding-left:27px}.item{position:relative;margin-bottom:28px}.item:before{content:"";width:10px;height:10px;background:var(--red);border-radius:50%;position:absolute;left:-33px;top:9px}.item strong{color:#fff;font-size:23px}.item span{display:block;color:#e54b50;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+/* DARK HISTORY */
+.dark-section{background:#101216;color:#fff}
+.dark-in{max-width:var(--max);margin:auto;padding:78px 22px}
+.history-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:75px}
+.dark-in h2{color:#fff}
+.dark-in .intro{color:#bfc2c7;font-size:17px}
+.timeline{border-left:2px solid #34373c;padding-left:28px}
+.event{position:relative;margin-bottom:31px}
+.event:before{
+  content:"";position:absolute;width:10px;height:10px;border-radius:50%;
+  background:var(--red);left:-34px;top:8px
+}
+.event .year{
+  color:#f04a50;font-size:10px;font-weight:950;
+  letter-spacing:1.7px;text-transform:uppercase
+}
+.event h3{font-size:23px;margin:2px 0 5px}
+.event p{color:#bfc2c7;font-size:14px}
 
-/* ARCHIVE */
-.archive{display:grid;grid-template-columns:1fr 1fr;gap:35px}
-.card{background:#fff;border:1px solid var(--line);padding:25px}.card h3{font-size:21px;text-transform:uppercase;margin-bottom:12px}.card p{color:#555;font-size:14px}.poster{background:#0c0e11;padding:12px}.poster img{width:100%;height:auto}.caption{font-size:10px;color:#999;margin-top:8px}
-footer{background:#08090b;color:#999;text-align:center;padding:30px 22px;font-size:11px}
-@media(max-width:900px){.navlinks{display:none}.hero-in,.story,.history-grid,.archive{grid-template-columns:1fr}.hero-copy{padding-bottom:30px}.hero-visual{min-height:600px}.facts{margin:0 18px;grid-template-columns:1fr 1fr}.fact:nth-child(2){border-right:0}.fact:nth-child(-n+2){border-bottom:1px solid #34383d}}
-@media(max-width:560px){.facts{grid-template-columns:1fr}.fact{border-right:0!important;border-bottom:1px solid #34383d!important}.fact:last-child{border-bottom:0!important}.hero-visual{min-height:500px}.hero-copy{padding-top:45px}.crumb{margin-bottom:30px}}
+/* GALLERY / SOURCES */
+.archive{display:grid;grid-template-columns:1.1fr .9fr;gap:35px}
+.card{background:#fff;border:1px solid var(--line);padding:25px}
+.card h3{font-size:21px;text-transform:uppercase;margin-bottom:14px}
+.card p{font-size:14px;color:#555}
+.gallery{display:grid;grid-template-columns:1.35fr .65fr;gap:12px;align-items:stretch}
+.gallery img{width:100%;height:100%;object-fit:cover}
+.gallery .main{min-height:430px}
+.gallery .detail{min-height:430px}
+.caption{font-size:10px;color:#8a8d92;margin-top:8px}
+.sources a{text-decoration:underline;text-underline-offset:3px}
+.sources p + p{margin-top:15px}
+
+/* FOOTER */
+footer{background:#08090c;color:#999;text-align:center;padding:31px 22px;font-size:11px}
+.footer-line{color:#fff;font-weight:900;letter-spacing:2px;margin-bottom:6px}
+
+@media(max-width:900px){
+  .nav{display:none}
+  .hero-in{grid-template-columns:1fr}
+  .hero-copy{padding-top:45px;padding-bottom:42px}
+  .hero-photo{min-height:600px}
+  .facts{margin:0 18px;grid-template-columns:1fr 1fr}
+  .fact:nth-child(2){border-right:0}
+  .fact:nth-child(-n+2){border-bottom:1px solid #34383d}
+  .story,.history-grid,.archive{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .header{height:64px}
+  .header-in{padding:0 16px}
+  .logo{font-size:26px}
+  .back{font-size:9px}
+  .hero-copy{padding-left:18px;padding-right:18px}
+  .crumb{margin-bottom:30px}
+  h1{font-size:57px}
+  .hero-lead{font-size:18px}
+  .hero-photo{min-height:520px}
+  .facts{grid-template-columns:1fr}
+  .fact{border-right:0!important;border-bottom:1px solid #34383d!important}
+  .fact:last-child{border-bottom:0!important}
+  .section{padding:60px 18px}
+  .dark-in{padding:60px 18px}
+  .gallery{grid-template-columns:1fr}
+  .gallery .main,.gallery .detail{min-height:auto}
+}
 </style>
 </head>
 <body>
 
-<header class="navbar">
-  <div class="nav-in">
+<header class="header">
+  <div class="header-in">
     <a class="logo" href="index.html">PE<span>N</span>A</a>
-    <nav class="navlinks">
+    <nav class="nav">
       <a href="index.html">Beranda</a>
       <a href="index.html#penyuluh">Penyuluh</a>
       <a href="index.html#gagasan">Gagasan</a>
@@ -84,55 +225,74 @@ footer{background:#08090b;color:#999;text-align:center;padding:30px 22px;font-si
 <section class="hero">
   <div class="hero-in">
     <div class="hero-copy">
-      <div class="crumb">Beranda &nbsp;›&nbsp; Jejak &nbsp;›&nbsp; <span>Tugu Narkoba Bogor</span></div>
+      <div class="crumb">Beranda &nbsp;›&nbsp; Jejak &nbsp;›&nbsp; <b>Tugu Narkoba Bogor</b></div>
       <div class="kicker">Jejak Sejarah</div>
       <h1><span class="white">TUGU</span><br><span class="red">NARKOBA</span><br><span class="white">BOGOR</span></h1>
-      <div class="rule"></div>
-      <p class="lead">Sebuah monumen, sebuah pesan, sebuah jejak perjuangan.</p>
-      <p class="mini">PENA menghadirkan kembali kisah sebuah tugu yang berdiri sebagai pengingat perjuangan antinarkoba di Bogor.</p>
-      <a class="cta" href="#cerita">Lihat cerita lengkap&nbsp; →</a>
+      <div class="hero-rule"></div>
+      <p class="hero-lead">Sebuah monumen, sebuah pesan, sebuah jejak perjuangan.</p>
+      <p class="hero-note">PENA menghadirkan kembali satu jejak sejarah antinarkoba di Bogor—tanpa mengulang isi flyer, tetapi menempatkan tugunya sebagai pusat cerita.</p>
+      <a class="cta" href="#cerita">Lihat cerita lengkap →</a>
     </div>
 
-    <div class="hero-visual">
-      <img src="assets/tugu-narkoba-bogor-hero.jpg" alt="Tugu Narkoba Bogor — dokumentasi PENA">
-      <div class="visual-label">Tugu Narkoba • Bogor</div>
+    <div class="hero-photo">
+      <img src="assets/tugu-narkoba-bogor-fokus.jpg" alt="Tugu Narkoba Bogor">
+      <div class="photo-tag">Objek Arsip • Tugu Narkoba Bogor</div>
     </div>
   </div>
 </section>
 
 <div class="facts">
-  <div class="fact"><b>1986</b><small>Tahun pendirian</small></div>
-  <div class="fact"><b>KNPI &amp; Briganti</b><small>Penggagas</small></div>
-  <div class="fact"><b>Kedung Halang, Bogor</b><small>Lokasi</small></div>
-  <div class="fact"><b>Jejak Antinarkoba</b><small>Makna sejarah</small></div>
+  <div class="fact"><strong>1986</strong><small>Tahun pendirian</small></div>
+  <div class="fact"><strong>KNPI &amp; Briganti</strong><small>Penggagas yang tercatat</small></div>
+  <div class="fact"><strong>Kedung Halang, Bogor</strong><small>Lokasi</small></div>
+  <div class="fact"><strong>Jejak Antinarkoba</strong><small>Makna sejarah</small></div>
 </div>
 
 <section class="section" id="cerita">
   <div class="story">
     <div>
-      <div class="section-kicker">Tentang Tugu Narkoba</div>
+      <div class="section-kicker">Tentang Tugu</div>
       <h2>Bukan Sekadar<br>Monumen</h2>
-      <p>Tugu Narkoba adalah salah satu jejak fisik perjuangan antinarkoba yang pernah hadir di ruang publik Bogor.</p>
-      <p>Menurut pemberitaan ANTARA pada 2015, tugu ini dibangun pada <strong>1986</strong> oleh KNPI dan Briganti (Brigadir Anti Narkotik) di kawasan Kedung Halang.</p>
-      <p>Bagi PENA, nilai terpentingnya bukan hanya pada bentuk tugu, tetapi pada pesan sosial yang ditinggalkannya: <strong>pemuda memiliki keberanian untuk berdiri melawan narkoba.</strong></p>
+      <p>Tugu Narkoba menjadi pengingat bahwa perjuangan melawan narkoba memiliki sejarah yang panjang dan pernah diwujudkan secara nyata di ruang publik.</p>
+      <p>Menurut pemberitaan ANTARA pada 2015, tugu ini dibangun pada <strong>1986</strong> oleh KNPI dan Briganti (Brigadir Anti Narkotik) di kawasan Kedung Halang, Bogor.</p>
+      <p>PENA mencatatnya sebagai sebuah <strong>jejak</strong>: sesuatu yang patut dilihat kembali, dipahami, dan disimpan agar tidak hilang dari ingatan.</p>
     </div>
-    <div class="quote">“Setiap langkah pemuda menuju masa depan, adalah jawaban atas bahaya narkoba.”<small>Catatan PENA</small></div>
+    <div class="quote">
+      “Setiap langkah pemuda menuju masa depan, adalah jawaban atas bahaya narkoba.”
+      <small>Catatan PENA</small>
+    </div>
   </div>
 </section>
 
-<section class="history">
-  <div class="history-in">
+<section class="dark-section">
+  <div class="dark-in">
     <div class="history-grid">
       <div>
         <div class="section-kicker">Lintasan Sejarah</div>
-        <h2>Jejak Yang<br>Perlu Diingat</h2>
-        <p>Sejarah tidak selalu berada dalam buku. Kadang ia tinggal pada sebuah tempat, sebuah tugu, dan ingatan orang-orang yang pernah memperjuangkannya.</p>
+        <h2>Yang Perlu<br>Diingat</h2>
+        <p class="intro">Sejarah tidak selalu tersimpan dalam dokumen. Kadang ia tinggal pada sebuah tugu dan pesan yang pernah ditanamkan kepada generasi muda.</p>
       </div>
       <div class="timeline">
-        <div class="item"><span>1986</span><strong>Tugu dibangun</strong><p>KNPI dan Briganti menjadi bagian dari sejarah awal pembangunan tugu antinarkoba ini.</p></div>
-        <div class="item"><span>2015</span><strong>Kembali disorot</strong><p>Keberadaan dan masa depan tugu kembali menjadi perhatian dalam pemberitaan tentang ruang publik dan antinarkoba.</p></div>
-        <div class="item"><span>2017</span><strong>Pesan kembali ditegaskan</strong><p>Dokumentasi visual yang menjadi arsip PENA menampilkan tugu dengan pesan “Pemuda Meraih Prestasi Tanpa Narkoba”.</p></div>
-        <div class="item"><span>Hari ini</span><strong>Diarsipkan PENA</strong><p>PENA mengembalikan tugu ini ke ruang ingatan sebagai bagian dari Jejak Sejarah.</p></div>
+        <div class="event">
+          <div class="year">1986</div>
+          <h3>Tugu dibangun</h3>
+          <p>Menurut sumber pemberitaan yang tersedia, KNPI dan Briganti menjadi bagian dari sejarah awal pembangunan tugu antinarkoba ini.</p>
+        </div>
+        <div class="event">
+          <div class="year">2015</div>
+          <h3>Kembali menjadi perhatian</h3>
+          <p>Keberadaan dan masa depan tugu kembali disorot dalam pemberitaan mengenai ruang publik dan perjuangan antinarkoba di Bogor.</p>
+        </div>
+        <div class="event">
+          <div class="year">2017</div>
+          <h3>Pesan “tanpa narkoba” kembali hadir</h3>
+          <p>Dokumentasi yang diarsipkan PENA memperlihatkan tugu dengan pesan “Pemuda Meraih Prestasi Tanpa Narkoba”.</p>
+        </div>
+        <div class="event">
+          <div class="year">PENA</div>
+          <h3>Jejak disimpan kembali</h3>
+          <p>PENA menempatkannya dalam ruang Jejak Sejarah agar keberadaan dan pesannya dapat ditemukan kembali oleh generasi berikutnya.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -141,24 +301,33 @@ footer{background:#08090b;color:#999;text-align:center;padding:30px 22px;font-si
 <section class="section">
   <div class="archive">
     <div class="card">
-      <div class="section-kicker">Dokumentasi</div>
-      <h3>Foto Tugu</h3>
-      <div class="poster"><img src="assets/tugu-narkoba-bogor-dokumentasi.jpg" alt="Dokumentasi visual Tugu Narkoba Bogor"></div>
-      <div class="caption">Foto yang dikirim dan diarsipkan untuk halaman Jejak PENA.</div>
+      <div class="section-kicker">Dokumentasi Visual</div>
+      <h3>Wajah Tugu</h3>
+      <div class="gallery">
+        <div class="main"><img src="assets/tugu-narkoba-bogor-fokus.jpg" alt="Tugu Narkoba Bogor, tampak utuh"></div>
+        <div class="detail"><img src="assets/tugu-narkoba-bogor-detail.jpg" alt="Detail pedestal Tugu Narkoba Bogor"></div>
+      </div>
+      <div class="caption">Foto utama dan detail disusun untuk menonjolkan objek tugu, bukan poster promosi.</div>
     </div>
-    <div class="card">
-      <div class="section-kicker">Catatan Sumber</div>
-      <h3>Arsip &amp; Verifikasi</h3>
-      <p>Informasi sejarah pada halaman ini disusun dari pemberitaan publik dan dokumentasi yang tersedia. PENA membedakan antara fakta yang memiliki sumber, konteks sejarah, dan catatan interpretatif.</p>
-      <p style="margin-top:15px">Jika kelak ditemukan dokumen primer, foto lama, atau kesaksian pelaku sejarah, arsip ini dapat diperbarui melalui PENA Admin.</p>
-      <p style="margin-top:20px"><a href="https://megapolitan.antaranews.com/amp/berita/12732/amar-usulkan-tugu-narkoba-diganti-monumen-ktr" target="_blank" rel="noopener">ANTARA · 6 Mei 2015</a><br>
-      <a href="https://megapolitan.antaranews.com/berita/12773/amar-siapkan-rancangan-tugu-ktr" target="_blank" rel="noopener">ANTARA · 8 Mei 2015</a><br>
-      <a href="https://www.antaranews.com/berita/495488/budayawan-bogor-usulkan-pembangunan-taman-pemuda" target="_blank" rel="noopener">ANTARA · 11 Mei 2015</a><br>
-      <a href="https://mediaindonesia.com/megapolitan/75313/dede-susianti-j-3" target="_blank" rel="noopener">Media Indonesia · 3 Nov 2016</a></p>
+
+    <div class="card sources">
+      <div class="section-kicker">Arsip</div>
+      <h3>Sumber &amp; Verifikasi</h3>
+      <p>Halaman ini membedakan fakta yang memiliki sumber, konteks sejarah, dan catatan interpretatif PENA. Jika ditemukan dokumen primer atau kesaksian pelaku sejarah, arsip dapat diperbarui.</p>
+      <p>
+        <a href="https://megapolitan.antaranews.com/amp/berita/12732/amar-usulkan-tugu-narkoba-diganti-monumen-ktr" target="_blank" rel="noopener">ANTARA · 6 Mei 2015</a><br>
+        <a href="https://megapolitan.antaranews.com/berita/12773/amar-siapkan-rancangan-tugu-ktr" target="_blank" rel="noopener">ANTARA · 8 Mei 2015</a><br>
+        <a href="https://www.antaranews.com/berita/495488/budayawan-bogor-usulkan-pembangunan-taman-pemuda" target="_blank" rel="noopener">ANTARA · 11 Mei 2015</a><br>
+        <a href="https://mediaindonesia.com/megapolitan/75313/dede-susianti-j-3" target="_blank" rel="noopener">Media Indonesia · 3 Nov 2016</a>
+      </p>
+      <p><strong>Catatan:</strong> foto poster asli tetap disimpan sebagai dokumentasi arsip PENA, tetapi tidak dipakai sebagai gambar hero agar perhatian pengunjung tertuju pada tugunya.</p>
     </div>
   </div>
 </section>
 
-<footer>PENA — Catatan, pemikiran, arsip, dan jejak perjalanan seorang Penyuluh Narkoba.</footer>
+<footer>
+  <div class="footer-line">PENA.MYTije.COM</div>
+  Catatan, pemikiran, arsip, dan jejak perjalanan seorang Penyuluh Narkoba.
+</footer>
 </body>
 </html>
