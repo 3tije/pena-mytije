@@ -317,6 +317,35 @@
       font-size:11px;
       font-weight:900;
       letter-spacing:2px;
+      overflow:hidden;
+    }
+    .article-img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .35s ease;
+    }
+    .article:hover .article-img img{
+      transform:scale(1.03);
+    }
+    .article-link{
+      display:block;
+      height:100%;
+    }
+    .article-link .article-body{
+      transition:.2s;
+    }
+    .article-link:hover .article-body{
+      background:#fff;
+    }
+    .read-more{
+      display:inline-block;
+      margin-top:16px;
+      color:var(--red);
+      font-size:10px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.7px;
     }
     .article-body{padding:24px}
     .tag{
@@ -723,12 +752,19 @@
 
       <div class="article-grid">
         <article class="article">
-          <div class="article-img">REFLEKSI</div>
-          <div class="article-body">
-            <span class="tag">Refleksi</span>
-            <h3>Mengapa Saya Kembali Menjadi Penyuluh?</h3>
-            <p>Sebuah pertanyaan yang akan menemukan jawabannya melalui perjalanan yang terus berjalan.</p>
-          </div>
+          <a class="article-link" href="refleksi-kembali-menjadi-penyuluh.html">
+            <div class="article-img">
+              <img src="assets/refleksi-kembali-menjadi-penyuluh.webp"
+                   alt="Pertemuan selepas salat Jumat — Mengapa Saya Kembali Menjadi Penyuluh?"
+                   loading="lazy">
+            </div>
+            <div class="article-body">
+              <span class="tag">Refleksi</span>
+              <h3>Mengapa Saya Kembali Menjadi Penyuluh?</h3>
+              <p>Sebuah percakapan sederhana selepas salat Jumat yang mengingatkan kembali makna menjadi seorang Penyuluh.</p>
+              <span class="read-more">Baca refleksi →</span>
+            </div>
+          </a>
         </article>
 
         <article class="article">
