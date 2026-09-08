@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ketika Kompetensi Menjadi Persoalan — catatan tentang profesi, kompetensi, dan kebutuhan untuk terus berkembang.">
+<meta name="theme-color" content="#111111">
+<title>Ketika Kompetensi Menjadi Persoalan — PENA</title>
+<style>
+:root{
+  --black:#111;
+  --dark:#191b1e;
+  --red:#c92127;
+  --soft:#f4f4f2;
+  --text:#242424;
+  --muted:#777;
+  --line:#deded9;
+  --max:900px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:#fff;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.8;
+}
+a{color:inherit}
+.topbar{
+  background:var(--black);
+  color:#fff;
+  padding:16px 22px;
+}
+.topbar-inner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.brand{
+  text-decoration:none;
+  font-weight:900;
+  letter-spacing:4px;
+  font-size:18px;
+}
+.brand span{color:#e62d32}
+.back{
+  text-decoration:none;
+  font-size:13px;
+  color:#ddd;
+  border-bottom:1px solid #555;
+  padding-bottom:2px;
+}
+.hero{
+  width:100%;
+  background:#111;
+}
+.hero img{
+  display:block;
+  width:100%;
+  max-height:700px;
+  object-fit:cover;
+  object-position:center;
+}
+.article-wrap{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:62px 24px 80px;
+}
+.eyebrow{
+  color:var(--red);
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+h1{
+  margin:0;
+  color:var(--black);
+  font-size:clamp(38px,6vw,68px);
+  line-height:1.02;
+  letter-spacing:-2px;
+}
+.subtitle{
+  margin:22px 0 36px;
+  color:#666;
+  font-size:20px;
+  line-height:1.55;
+  max-width:720px;
+}
+.meta{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:14px 0;
+  margin-bottom:44px;
+  color:#777;
+  font-size:13px;
+}
+.article p{
+  font-size:18px;
+  margin:0 0 25px;
+}
+.article h2{
+  color:var(--black);
+  font-size:28px;
+  line-height:1.25;
+  margin:52px 0 18px;
+}
+.article h2::before{
+  content:"";
+  display:inline-block;
+  width:28px;
+  height:4px;
+  background:var(--red);
+  margin:0 12px 7px 0;
+}
+.pull{
+  margin:42px 0;
+  padding:26px 28px;
+  background:var(--soft);
+  border-left:5px solid var(--red);
+  font-size:24px;
+  line-height:1.5;
+  font-weight:700;
+  color:#222;
+}
+.note{
+  margin-top:55px;
+  padding-top:25px;
+  border-top:1px solid var(--line);
+  color:#666;
+  font-size:14px;
+}
+.footer{
+  background:var(--black);
+  color:#bbb;
+  padding:35px 22px;
+}
+.footer-inner{
+  max-width:var(--max);
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.footer strong{color:#fff;letter-spacing:3px}
+@media(max-width:600px){
+  .topbar{padding:14px 16px}
+  .brand{font-size:15px;letter-spacing:3px}
+  .back{font-size:12px}
+  .article-wrap{padding:42px 19px 60px}
+  h1{font-size:42px;letter-spacing:-1.2px}
+  .subtitle{font-size:18px}
+  .article p{font-size:17px;line-height:1.75}
+  .article h2{font-size:25px}
+  .pull{font-size:21px;padding:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">PENA<span>.</span></a>
+    <a class="back" href="index.html#refleksi">← Kembali ke PENA</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <img src="assets/ketika-kompetensi-menjadi-persoalan.png"
+         alt="Seorang Penyuluh berjalan dari belakang membawa berkas, sebagai gambaran perjalanan profesional dan pengembangan kompetensi">
+  </div>
+
+  <article class="article-wrap article">
+    <div class="eyebrow">Penyuluh · Refleksi Profesi</div>
+
+    <h1>Ketika Kompetensi Menjadi Persoalan</h1>
+
+    <div class="subtitle">
+      Catatan tentang profesi, kompetensi, dan kebutuhan untuk terus berkembang.
+    </div>
+
+    <div class="meta">PENA — Catatan Seorang Penyuluh Narkoba</div>
+
+    <p>
+      Kalau seorang Penyuluh sudah memiliki jabatan, tugas, uraian pekerjaan,
+      bahkan standar kompetensi, apakah itu otomatis berarti ia sudah kompeten?
+    </p>
+
+    <p>
+      Pertanyaan itu mungkin terdengar sederhana. Tetapi semakin lama saya
+      menjalani profesi ini, semakin saya merasa bahwa persoalan kompetensi
+      justru menjadi salah satu hal yang perlu kita bicarakan dengan jujur.
+    </p>
+
+    <p>
+      Bukan karena Penyuluh tidak memiliki kemampuan. Bukan pula karena
+      Penyuluh tidak bekerja. Tetapi karena tuntutan pekerjaan terus bergerak,
+      sementara kompetensi kita juga seharusnya bergerak bersamanya.
+    </p>
+
+    <h2>Jejak itu sudah terlihat sejak 2020</h2>
+
+    <p>
+      Kalau melihat jejak pembahasan tentang kompetensi Penyuluh Narkoba,
+      persoalan ini bukan sesuatu yang baru muncul hari ini. Sejak 2020,
+      arah itu sudah semakin jelas melalui hadirnya
+      <strong>Peraturan Kepala BNN Nomor 2 Tahun 2020 tentang Standar Kompetensi
+      Jabatan Fungsional Penyuluh Narkoba</strong>.
+    </p>
+
+    <p>
+      Bagi saya, hadirnya standar kompetensi tersebut seharusnya tidak hanya
+      dipandang sebagai dokumen administrasi. Ia adalah pesan profesional:
+      bahwa jabatan Penyuluh Narkoba membutuhkan kompetensi yang dapat
+      dipertanggungjawabkan.
+    </p>
+
+    <p>
+      Artinya, menjadi Penyuluh bukan hanya soal menduduki jabatan.
+      Ada pengetahuan yang harus dikuasai, keterampilan yang harus dilatih,
+      sikap profesional yang harus dibangun, dan kemampuan yang harus terus
+      dikembangkan.
+    </p>
+
+    <h2>Membaca aturan belum tentu membuat kita kompeten</h2>
+
+    <p>
+      Di sinilah persoalannya menjadi lebih menarik.
+    </p>
+
+    <p>
+      Kita dapat membaca berbagai regulasi. Kita dapat mengetahui bahwa
+      kompetensi merupakan bagian penting dalam pengembangan jabatan.
+      Kita juga dapat memahami bahwa ada standar yang harus dipenuhi.
+      Tetapi membaca standar kompetensi belum tentu membuat seseorang
+      benar-benar kompeten.
+    </p>
+
+    <p>
+      Kompetensi baru memiliki makna ketika ia diterjemahkan menjadi
+      kemampuan nyata dalam pekerjaan.
+    </p>
+
+    <div class="pull">
+      Sertifikat seharusnya menjadi cermin kompetensi, bukan perhiasan profesi.
+    </div>
+
+    <h2>Dari Standar Kompetensi menuju Unit Kompetensi</h2>
+
+    <p>
+      Tantangan berikutnya adalah bagaimana menerjemahkan arah standar
+      kompetensi tersebut menjadi kemampuan yang lebih operasional.
+    </p>
+
+    <p>
+      Dalam pendekatan kompetensi yang lebih terstruktur, kita mengenal
+      gagasan tentang <strong>Unit Kompetensi</strong>. Di sinilah sebuah
+      pekerjaan tidak berhenti pada kalimat “harus mampu”, tetapi mulai
+      dirumuskan: kemampuan apa yang harus dimiliki, bagaimana seseorang
+      membuktikan kemampuannya, dan apa ukuran bahwa pekerjaan tersebut
+      memang dapat dilakukan dengan benar.
+    </p>
+
+    <p>
+      Bagi saya, bagian ini bukan perkara sederhana. Merumuskan Unit
+      Kompetensi membutuhkan pemahaman terhadap pekerjaan sekaligus
+      pemahaman terhadap kerangka kompetensi itu sendiri.
+    </p>
+
+    <p>
+      Karena itu, ketika kita berbicara tentang standar kompetensi Penyuluh,
+      kita sebenarnya sedang berbicara tentang dua hal sekaligus:
+      <strong>memahami pekerjaan Penyuluh</strong> dan
+      <strong>mampu menerjemahkan pekerjaan itu ke dalam kompetensi yang
+      terukur</strong>.
+    </p>
+
+    <h2>Siapa yang benar-benar memahami pekerjaannya?</h2>
+
+    <p>
+      Pertanyaan ini mungkin agak mengusik.
+    </p>
+
+    <p>
+      Tetapi menurut saya perlu ditanyakan: ketika kita ikut membahas,
+      menyusun, atau mendefinisikan kompetensi sebuah profesi, seberapa jauh
+      kita benar-benar memahami pekerjaan profesi tersebut?
+    </p>
+
+    <p>
+      Pengalaman lapangan tentu penting. Pengetahuan tentang regulasi juga
+      penting. Pengalaman mengelola program, melakukan penyuluhan,
+      berkomunikasi dengan masyarakat, membangun jejaring, melakukan
+      pendampingan, menyusun strategi, sampai mengevaluasi program semuanya
+      merupakan bagian dari pengalaman profesional.
+    </p>
+
+    <p>
+      Namun pengalaman saja tidak selalu cukup. Ia perlu dipertemukan dengan
+      pengetahuan, pembelajaran, latihan, dan refleksi.
+    </p>
+
+    <h2>Kompetensi tidak boleh berhenti menjadi dokumen</h2>
+
+    <p>
+      Saya khawatir kita terlalu mudah merasa selesai ketika sebuah standar
+      sudah ditetapkan.
+    </p>
+
+    <p>
+      Padahal standar kompetensi hanyalah titik awal.
+    </p>
+
+    <p>
+      Setelah standar ada, pertanyaan berikutnya justru lebih penting:
+      bagaimana Penyuluh mengembangkan dirinya agar mampu memenuhi standar
+      tersebut?
+    </p>
+
+    <p>
+      Di sinilah pengembangan kompetensi seharusnya menjadi kebutuhan
+      profesional, bukan sekadar kewajiban administratif.
+    </p>
+
+    <h2>Lalu saya melihat diri saya sendiri</h2>
+
+    <p>
+      Ketika membicarakan kompetensi, saya tidak ingin menempatkan diri
+      seolah-olah sudah selesai. Justru saya melihat perjalanan saya sendiri.
+    </p>
+
+    <p>
+      Saya mengikuti berbagai proses belajar, pelatihan, dan sertifikasi.
+      Di antaranya adalah CCP, CT, CNGT, CNHC, dan pengalaman pengembangan
+      kompetensi lainnya.
+    </p>
+
+    <p>
+      Bagi saya, semua itu bukan sekadar deretan huruf di belakang nama.
+      Setiap proses belajar seharusnya meninggalkan kemampuan baru,
+      cara pandang baru, dan kualitas kerja yang lebih baik.
+    </p>
+
+    <p>
+      Karena kalau sertifikat bertambah tetapi kemampuan tidak bertambah,
+      maka kita perlu bertanya kembali: sebenarnya apa yang sedang kita
+      kembangkan?
+    </p>
+
+    <h2>Sertifikat bukan perhiasan profesi</h2>
+
+    <p>
+      Saya percaya sertifikasi memiliki tempat penting dalam perjalanan
+      profesional. Tetapi sertifikat bukan tujuan akhir.
+    </p>
+
+    <p>
+      Sertifikat seharusnya menunjukkan bahwa ada proses pembelajaran,
+      pengujian, atau pengakuan kompetensi yang telah dilalui. Nilai
+      sesungguhnya baru terlihat ketika kompetensi tersebut digunakan
+      dalam pekerjaan.
+    </p>
+
+    <p>
+      Dengan kata lain:
+    </p>
+
+    <div class="pull">
+      Sertifikat bukan tujuan. Kompetensi adalah tujuan.
+    </div>
+
+    <h2>Penyuluh tidak hanya membutuhkan pengetahuan</h2>
+
+    <p>
+      Profesi Penyuluh Narkoba berhadapan langsung dengan manusia.
+      Karena itu, kompetensi tidak cukup hanya berupa pengetahuan tentang
+      narkoba dan kebijakan P4GN.
+    </p>
+
+    <p>
+      Kita membutuhkan kemampuan membaca data, memahami masyarakat,
+      memilih metode dan media yang tepat, membangun komunikasi, merancang
+      model intervensi, melaksanakan kegiatan, melakukan monitoring dan
+      evaluasi, sampai memberikan rekomendasi berdasarkan temuan di
+      lapangan.
+    </p>
+
+    <p>
+      Semakin saya melihat pekerjaan ini secara utuh, semakin saya merasa
+      bahwa profesi Penyuluh memiliki ruang kompetensi yang sangat luas.
+    </p>
+
+    <h2>Dari sini saya melihat pentingnya Unit Kompetensi</h2>
+
+    <p>
+      Karena itu saya melihat kebutuhan untuk memetakan kompetensi teknis
+      Penyuluh ke dalam Unit Kompetensi yang lebih jelas dan operasional.
+    </p>
+
+    <p>
+      Dengan peta seperti itu, Penyuluh dapat melihat profesinya bukan
+      sebagai pekerjaan yang hanya memiliki satu kemampuan utama, tetapi
+      sebagai rangkaian kemampuan yang saling terhubung.
+    </p>
+
+    <p>
+      Peta kompetensi juga dapat membantu kita bertanya kepada diri sendiri:
+      bagian mana yang sudah saya kuasai, bagian mana yang masih lemah,
+      dan kompetensi apa yang perlu saya kembangkan berikutnya?
+    </p>
+
+    <h2>Penyuluh seharusnya tidak menunggu ditanya</h2>
+
+    <p>
+      Menurut saya, pengembangan kompetensi seharusnya tidak selalu
+      menunggu instruksi.
+    </p>
+
+    <p>
+      Kalau kita sudah memahami standar kompetensi profesi kita, maka
+      pertanyaan berikutnya seharusnya muncul dari dalam diri sendiri:
+      <em>apa yang harus saya pelajari agar lebih mampu menjalankan pekerjaan
+      ini?</em>
+    </p>
+
+    <p>
+      Dunia berubah. Cara masyarakat menerima informasi berubah.
+      Teknologi berubah. Karakter generasi berubah. Pola komunikasi berubah.
+      Tantangan narkoba juga berubah.
+    </p>
+
+    <p>
+      Maka cara kita bekerja pun tidak boleh berhenti pada pola yang sama.
+    </p>
+
+    <h2>Kompetensi adalah perjalanan</h2>
+
+    <p>
+      Saya semakin percaya bahwa kompetensi bukan sebuah garis akhir.
+    </p>
+
+    <p>
+      Ia adalah perjalanan.
+    </p>
+
+    <p>
+      Kita belajar. Kita mencoba. Kita gagal. Kita memperbaiki.
+      Kita mengikuti pelatihan. Kita membaca. Kita berdiskusi.
+      Kita mendapatkan pengalaman. Kita melakukan refleksi.
+    </p>
+
+    <p>
+      Semua itu membentuk profesionalisme.
+    </p>
+
+    <p>
+      Karena pada akhirnya, masyarakat tidak membutuhkan Penyuluh yang
+      hanya memiliki jabatan. Masyarakat membutuhkan Penyuluh yang
+      benar-benar mampu hadir dan bekerja ketika dibutuhkan.
+    </p>
+
+    <h2>Saya pun belum selesai</h2>
+
+    <p>
+      Tulisan ini bukan penilaian terhadap orang lain.
+    </p>
+
+    <p>
+      Justru sebaliknya, ini adalah pengingat untuk diri saya sendiri.
+    </p>
+
+    <p>
+      Bahwa selama masih menyandang profesi sebagai Penyuluh, saya masih
+      memiliki kewajiban untuk belajar.
+    </p>
+
+    <p>
+      Masih ada kompetensi yang perlu diperdalam. Masih ada pengalaman
+      yang perlu dipelajari. Masih ada kemampuan yang perlu diasah.
+      Dan masih ada banyak hal yang mungkin belum saya pahami.
+    </p>
+
+    <p>
+      Saya tidak ingin berhenti hanya karena merasa sudah lama bekerja.
+      Pengalaman seharusnya membuat kita semakin rendah hati untuk belajar,
+      bukan semakin merasa tidak perlu belajar.
+    </p>
+
+    <div class="pull">
+      Jabatan memberi kita posisi. Kompetensi membuat kita layak berada di dalamnya.
+    </div>
+
+    <h2>Catatan PENA</h2>
+
+    <p>
+      Mungkin inilah persoalan kompetensi yang sebenarnya.
+    </p>
+
+    <p>
+      Bukan sekadar apakah kita memiliki sertifikat.
+      Bukan sekadar apakah standar kompetensi sudah dibuat.
+      Dan bukan sekadar apakah kita sudah lama menjalankan pekerjaan.
+    </p>
+
+    <p>
+      Tetapi ketika masyarakat membutuhkan kita,
+      <strong>apakah kita benar-benar mampu?</strong>
+    </p>
+
+    <p>
+      Pertanyaan itu menurut saya jauh lebih penting daripada sekadar
+      bertanya berapa banyak sertifikat yang kita miliki.
+    </p>
+
+    <p>
+      Karena seorang profesional tidak selesai ketika mendapatkan pengakuan.
+      Seorang profesional justru memulai tanggung jawab baru setelah
+      pengakuan itu diberikan.
+    </p>
+
+    <div class="note">
+      <strong>Catatan:</strong> Tulisan ini merupakan refleksi pribadi
+      tentang profesi Penyuluh Narkoba, pengembangan kompetensi, dan
+      kebutuhan untuk terus belajar. Rujukan regulasi dapat dikembangkan
+      lebih lanjut pada halaman arsip/rujukan PENA.
+    </div>
+  </article>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div><strong>PENA</strong><br>Catatan Seorang Penyuluh Narkoba</div>
+    <div>© 2026 PENA · mytije.com</div>
+  </div>
+</footer>
+
+</body>
+</html>
