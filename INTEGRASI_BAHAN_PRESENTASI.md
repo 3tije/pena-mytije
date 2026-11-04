@@ -24,3 +24,8 @@ Tidak perlu mengubah atau men-deploy ulang backend jika endpoint tersebut tetap 
 
 ## Deploy
 Upload isi folder `pena-mytije-main` ke repository GitHub Pages yang terhubung ke `pena.mytije.com`, dengan mempertahankan struktur folder.
+
+## Identitas tema dan kode internal
+- Klik wordmark PENA di header aplikasi untuk kembali ke `https://pena.mytije.com/`.
+- Kode tema lama seperti M01, M02, dan seterusnya tidak ditampilkan pada kartu, rekomendasi, maupun detail tema.
+- Kode teknis tetap dipertahankan di database sebagai kunci relasi antar tabel (tema, topik, dan kelompok sasaran). Menghapus nilai tersebut secara fisik akan memutus relasi dan membuat fungsi pencarian/rekomendasi tidak bekerja. Kode tersebut dapat disembunyikan pada tampilan kolom Google Sheets, tanpa menghapus nilainya.
