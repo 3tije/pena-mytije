@@ -158,10 +158,46 @@ function makeGuideSchedule(total,formatName,situationName){
  return parts.map((x,i)=>({stage:x[0],minutes:mins[i]})).filter(x=>x.minutes>0);
 }
 function buildGuide(){
+ if(!plan) throw new Error("Susun rancangan penyuluhan terlebih dahulu.");
  const sch=makeGuideSchedule(plan.duration,plan.format?.name,plan.situation?.name);
  const themes=plan.themes.map(d=>d.theme?.name||d.name||"Tema terpilih");
- const rows=sch.map((x,i)=>`${i+1}. ${x.stage}: ${x.minutes} menit`).join("\n");
- buildGuide();$("studioContext").textContent=`Sasaran: ${plan.group?.name||"-"} • Situasi: ${plan.situation?.name||"-"} • Tujuan: ${plan.goal?.name||"-"} • ${plan.duration} menit • ${plan.themes.length} tema terpilih.`;$("blueprintOutput").innerHTML=`<div class="notice success">Master Blueprint siap. Prompt ini dapat disalin ke ChatGPT. Tidak ada pemanggilan API AI dari aplikasi.</div><div class="slideprompt">${esc(masterPrompt)}</div>`;$("slideList").innerHTML=slides.map((s,i)=>{const prompt=makeSlidePrompt(s,i,slides);return `<article class="slide"><div class="sectionhead"><span class="tag">SLIDE ${String(i+1).padStart(2,"0")}</span><button class="small" onclick="copyText(slidePrompts[${i}],'Prompt slide disalin',this)">Salin Prompt Slide ${String(i+1).padStart(2,"0")}</button></div><h3>${esc(s.title)}</h3><ul>${s.bullets.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><details><summary class="hint">Lihat prompt lengkap</summary><div class="slideprompt">${esc(prompt)}</div></details></article>`}).join("");window.slidePrompts=slides.map((s,i)=>makeSlidePrompt(s,i,slides));$("slideCountLabel").textContent=slides.length+" slide";$("copyMaster").disabled=false;$("copyGuide").disabled=false;$("showGuide").disabled=false;$("blueprintStatus").textContent="✓ Blueprint dan prompt per slide berhasil dibuat.";$("blueprintStatus").classList.add("done-state");$("makeBlueprint").classList.add("copied");$("makeBlueprint").textContent="✓ Blueprint berhasil dibuat";setTimeout(()=>{$("makeBlueprint").classList.remove("copied");$("makeBlueprint").textContent="Buat Master Blueprint & Prompt per Slide"},2600)}
+ const rows=sch.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.stage)}</td><td>${x.minutes}</td></tr>`).join("");
+ const scheduleText=sch.map((x,i)=>`${i+1}. ${x.stage}: ${x.minutes} menit`).join("\n");
+ guidePrompt=`PANDUAN PENYULUH P4GN\n\nSASARAN: ${plan.group?.name||"-"}\nSITUASI: ${plan.situation?.name||"-"}\nFORMAT: ${plan.format?.name||"Fleksibel"}\nTUJUAN: ${plan.goal?.name||"-"}\nDURASI: ${plan.duration} menit\nTEMA: ${themes.join("; ")}\n\nPOLA PENYAMPAIAN DAN ALOKASI WAKTU:\n${scheduleText}\n\nARAHAN PELAKSANAAN:\n- Awali dengan konteks yang dekat dengan peserta dan jelaskan tujuan kegiatan.\n- Sampaikan pesan utama sesuai tema dan sumber yang dipilih.\n- Gunakan contoh atau aktivitas yang sesuai sasaran; jangan menambahkan klaim faktual di luar sumber.\n- Beri ruang refleksi, pertanyaan, atau partisipasi sesuai format kegiatan.\n- Tutup dengan rangkuman, ajakan realistis, dan informasi bantuan/rujukan yang telah diverifikasi.\n\nTEMA TERPILIH:\n${themes.map((x,i)=>`${i+1}. ${x}`).join("\n")}\n\nCATATAN: Sesuaikan bahasa dan metode dengan kondisi peserta. Pertahankan substansi materi berdasarkan database dan referensi terpilih.`;
+ $("guideOutput").innerHTML=`<h3>Panduan Pelaksanaan Penyuluhan</h3>
+ <div class="guide-meta"><span><b>Sasaran:</b> ${esc(plan.group?.name||"-")}</span><span><b>Durasi:</b> ${plan.duration} menit</span><span><b>Format:</b> ${esc(plan.format?.name||"Fleksibel")}</span></div>
+ <p><b>Tujuan perubahan:</b> ${esc(plan.goal?.name||"-")}</p>
+ <p><b>Tema:</b> ${themes.map(esc).join("; ")}</p>
+ <h4>Pola penyampaian dan hitungan waktu</h4>
+ <table><thead><tr><th>No.</th><th>Tahap</th><th>Waktu (menit)</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><th colspan="2">Total</th><th>${sch.reduce((a,x)=>a+x.minutes,0)}</th></tr></tfoot></table>
+ <h4>Petunjuk pelaksanaan</h4>
+ <ol><li><b>Pembukaan:</b> bangun perhatian, kaitkan kegiatan dengan situasi peserta, dan sampaikan tujuan.</li>
+ <li><b>Penyampaian inti:</b> uraikan pesan dan topik sesuai sumber yang terpilih.</li>
+ <li><b>Interaksi:</b> gunakan pertanyaan, contoh, diskusi, atau latihan sesuai format kegiatan.</li>
+ <li><b>Penegasan:</b> rangkum pesan kunci dan hubungkan dengan tindakan yang realistis.</li>
+ <li><b>Penutup:</b> sampaikan ajakan dan jalur bantuan/rujukan yang telah dipastikan kebenarannya.</li></ol>
+ <div class="guide-callout">Jaga penyampaian tetap partisipatif, tidak menghakimi, tidak menstigma, dan tidak menakut-nakuti. Jangan menambahkan fakta atau angka yang tidak didukung sumber.</div>
+ <div class="toolbar no-print"><button class="small softbtn" onclick="copyText(guidePrompt,'Panduan Penyuluh berhasil disalin.',this)">Salin Panduan Ini</button><button class="small softbtn" onclick="window.print()">Cetak Panduan</button></div>`;
+ $("copyGuide").disabled=false;$("showGuide").disabled=false;
+}
+function buildBlueprint(){
+ if(!plan||!plan.themes?.length){$("blueprintStatus").textContent="Susun rancangan penyuluhan dan pilih tema terlebih dahulu.";return;}
+ try{
+  const slides=makeSlideData(getSlideCount());
+  masterPrompt=buildMaster(slides);
+  buildGuide();
+  $("studioContext").textContent=`Sasaran: ${plan.group?.name||"-"} • Situasi: ${plan.situation?.name||"-"} • Tujuan: ${plan.goal?.name||"-"} • ${plan.duration} menit • ${plan.themes.length} tema terpilih.`;
+  $("blueprintOutput").innerHTML=`<div class="notice success">Master Blueprint siap. Prompt ini dapat disalin ke ChatGPT. Tidak ada pemanggilan API AI dari aplikasi.</div><div class="slideprompt">${esc(masterPrompt)}</div>`;
+  $("slideList").innerHTML=slides.map((s,i)=>{const prompt=makeSlidePrompt(s,i,slides);return `<article class="slide"><div class="sectionhead"><span class="tag">SLIDE ${String(i+1).padStart(2,"0")}</span><button class="small" onclick="copyText(slidePrompts[${i}],'Prompt slide disalin',this)">Salin Prompt Slide ${String(i+1).padStart(2,"0")}</button></div><h3>${esc(s.title)}</h3><ul>${s.bullets.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><details><summary class="hint">Lihat prompt lengkap</summary><div class="slideprompt">${esc(prompt)}</div></details></article>`}).join("");
+  window.slidePrompts=slides.map((s,i)=>makeSlidePrompt(s,i,slides));
+  $("slideCountLabel").textContent=slides.length+" slide";
+  $("copyMaster").disabled=false;$("copyGuide").disabled=false;$("showGuide").disabled=false;
+  $("blueprintStatus").textContent="✓ Blueprint, prompt per slide, dan Panduan Penyuluh berhasil dibuat.";
+  $("blueprintStatus").classList.add("done-state");
+  $("makeBlueprint").classList.add("copied");$("makeBlueprint").textContent="✓ Blueprint berhasil dibuat";
+  setTimeout(()=>{$("makeBlueprint").classList.remove("copied");$("makeBlueprint").textContent="Buat Master Blueprint & Prompt per Slide"},2600);
+ }catch(e){$("blueprintStatus").textContent="Gagal menyusun blueprint: "+e.message;console.error(e);}
+}
 $("makeBlueprint").onclick=buildBlueprint;
 async function copyText(t,msg,button){try{await navigator.clipboard.writeText(t);$("blueprintStatus").textContent="✓ "+(msg||"Teks berhasil disalin.");$("blueprintStatus").classList.add("done-state");if(button){const old=button.dataset.original||button.textContent;button.dataset.original=old;button.classList.add("copied");button.innerHTML="Tersalin";setTimeout(()=>{button.classList.remove("copied");button.textContent=old},2600)}}catch(e){$("blueprintStatus").textContent="Clipboard tidak tersedia; pilih dan salin teks secara manual.";}}
 $("copyMaster").onclick=function(){copyText(masterPrompt,"Master Blueprint berhasil disalin.",this)};
