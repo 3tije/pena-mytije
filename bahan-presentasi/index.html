@@ -36,7 +36,7 @@ footer{text-align:center;color:#818a9b;font-size:11px;padding:20px}
 <div class="panel no-print">
 <h2>1. Konteks kegiatan</h2>
 <label>Kelompok Sasaran</label><select id="group"><option value="">Memuat data...</option></select><div id="groupNote" class="hint"></div>
-<label>Situasi kegiatan</label><select id="situation"><option value="">Pilih situasi</option></select><div id="situationNote" class="hint"></div>\n<label>Format penyampaian</label><select id="format"><option value="">Pilih format (opsional)</option></select><div id="formatNote" class="hint"></div>
+<label>Situasi kegiatan</label><select id="situation"><option value="">Pilih situasi</option></select><div id="situationNote" class="hint"></div><label>Format penyampaian</label><select id="format"><option value="">Pilih format (opsional)</option></select><div id="formatNote" class="hint"></div>
 <label>Tujuan perubahan</label><select id="goal"><option value="">Pilih tujuan</option></select><div id="goalNote" class="hint"></div>
 <div class="fieldgrid"><div><label>Durasi (menit)</label><input id="duration" type="number" min="10" max="180" value="45"></div><div><label>Kata kunci isu (opsional)</label><input id="issue" type="text" placeholder="mis. pengaruh teman"></div></div>
 <div class="toolbar"><button id="recommend">Cari rekomendasi tema</button><button id="reset" class="softbtn">Reset</button></div><div id="plannerStatus" class="status">Menghubungkan ke database...</div>
@@ -86,7 +86,15 @@ function opts(arr,placeholder){return `<option value="">${placeholder}</option>`
 async function init(){
  try{db=await api("bootstrap");if(!db.ok)throw Error(db.error);$("group").innerHTML=opts(db.groups,"Pilih kelompok sasaran");$("situation").innerHTML=opts(db.situations,"Pilih situasi");
  $("format").innerHTML=opts(db.formats||[],"Pilih format penyampaian (opsional)");$("goal").innerHTML=opts(db.goals,"Pilih tujuan");$("catalogGroup").innerHTML='<option value="">Semua kelompok</option>'+db.groups.map(g=>`<option value="${esc(g.code)}">${esc(g.name)}</option>`).join("");$("plannerStatus").textContent="Database terhubung.";renderCatalog();$("dbStats").innerHTML=[["Kelompok",db.groups.length],["Tema",db.themes.length],["Topik",db.topics.length]].map(x=>`<div class="stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join("");}
- catch(e){$("plannerStatus").textContent="Koneksi gagal: "+e.message;$("recommend").disabled=true}
+ catch(e){
+ $("plannerStatus").textContent="Data belum dapat dimuat: "+e.message;
+ $("group").innerHTML='<option value="">Gagal memuat data</option>';
+ $("situation").innerHTML='<option value="">Gagal memuat data</option>';
+ $("goal").innerHTML='<option value="">Gagal memuat data</option>';
+ $("format").innerHTML='<option value="">Format belum tersedia</option>';
+ $("recommend").disabled=true;
+ console.error("PENA bootstrap error:",e);
+}
 }
 $("group").onchange=()=>{const x=db.groups.find(g=>g.code===$("group").value);$("groupNote").textContent=x?x.need:""};
 $("situation").onchange=()=>{const x=db.situations.find(g=>g.code===$("situation").value);$("situationNote").textContent=x?x.direction:""};
