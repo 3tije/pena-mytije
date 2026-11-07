@@ -84,7 +84,7 @@ function switchPage(id){document.querySelectorAll(".page").forEach(x=>x.classLis
 document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
 function opts(arr,placeholder){return `<option value="">${placeholder}</option>`+arr.map(x=>`<option value="${esc(x.code)}">${esc(x.code)} — ${esc(x.name)}</option>`).join("")}
 async function init(){
- try{db=await api("bootstrap");if(!db.ok)throw Error(db.error);$("group").innerHTML=opts(db.groups,"Pilih kelompok sasaran");$("situation").innerHTML=opts(db.situations,"Pilih situasi");
+ try{db=await api("bootstrap");if(!db.ok)throw Error(db.error);window._themeGroup=db.themeGroups||[];$("group").innerHTML=opts(db.groups,"Pilih kelompok sasaran");$("situation").innerHTML=opts(db.situations,"Pilih situasi");
  $("format").innerHTML=opts(db.formats||[],"Pilih format penyampaian (opsional)");$("goal").innerHTML=opts(db.goals,"Pilih tujuan");$("catalogGroup").innerHTML='<option value="">Semua kelompok</option>'+db.groups.map(g=>`<option value="${esc(g.code)}">${esc(g.name)}</option>`).join("");$("plannerStatus").textContent="Database terhubung.";renderCatalog();$("dbStats").innerHTML=[["Kelompok",db.groups.length],["Tema",db.themes.length],["Topik",db.topics.length]].map(x=>`<div class="stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join("");}
  catch(e){
  $("plannerStatus").textContent="Data belum dapat dimuat: "+e.message;
@@ -119,17 +119,126 @@ function renderSelected(){$("selectedCount").textContent=selected.length+" tema"
 $("buildPlan").onclick=async()=>{try{for(const c of selected)await loadThemeDetail(c);const group=db.groups.find(x=>x.code===$("group").value),sit=db.situations.find(x=>x.code===$("situation").value),goal=db.goals.find(x=>x.code===$("goal").value);const format=(db.formats||[]).find(x=>x.code===$("format").value)||null;
  plan={group,situation:sit,format,goal,duration:Number($("duration").value)||45,issue:$("issue").value,themes:selected.map(c=>details[c])};$("planSummary").innerHTML=`<div class="notice success"><b>Rancangan tersusun.</b> ${esc(group?.name||"Sasaran belum dipilih")} • ${esc(format?.name||"Format fleksibel")} • ${plan.duration} menit • ${selected.length} tema. Buka Presentation Studio untuk membuat blueprint dan prompt slide.</div>`;$("goStudio").disabled=false;}catch(e){$("planSummary").innerHTML=`<div class="notice">${esc(e.message)}</div>`}};
 $("goStudio").onclick=()=>switchPage("studio");
-function renderCatalog(){const q=($("catalogSearch").value||"").toLowerCase(),g=$("catalogGroup").value;const rel=window._themeGroup||[];const list=db.themes.filter(t=>{const text=[t.code,t.name,t.substance,t.description,t.outcome,t.pillar,...t.pks.flatMap(p=>[p.message,p.detail]),...db.topics.filter(x=>x.themeCode===t.code).map(x=>x.name)].join(" ").toLowerCase();return(!q||text.includes(q))&&(!g||true)});$("catalogCount").textContent=list.length+" tema";$("catalogList").innerHTML=list.map(t=>`<article class="theme-card"><div class="code">${esc(t.duration||"")}</div><h3>${esc(t.name)}</h3><p>${esc(t.substance)}</p><div class="hint">${db.topics.filter(x=>x.themeCode===t.code).length} topik</div><div class="toolbar"><button class="small" onclick="addTheme('${esc(t.code)}')">Tambahkan</button><button class="small softbtn" onclick="showTheme('${esc(t.code)}')">Lihat topik</button></div></article>`).join("")||'<div class="empty">Tidak ada tema ditemukan.</div>'}
+function renderCatalog(){const q=($("catalogSearch").value||"").toLowerCase(),g=$("catalogGroup").value;const rel=window._themeGroup||[];const list=db.themes.filter(t=>{const text=[t.code,t.name,t.substance,t.description,t.outcome,t.pillar,...t.pks.flatMap(p=>[p.message,p.detail]),...db.topics.filter(x=>x.themeCode===t.code).map(x=>x.name)].join(" ").toLowerCase();return(!q||text.includes(q))&&(!g||((window._themeGroup||[]).some(r=>r.themeCode===t.code&&String(r.groupCode||'').toUpperCase()===g.toUpperCase())))});$("catalogCount").textContent=list.length+" tema";$("catalogList").innerHTML=list.map(t=>`<article class="theme-card"><div class="code">${esc(t.duration||"")}</div><h3>${esc(t.name)}</h3><p>${esc(t.substance)}</p><div class="hint">${db.topics.filter(x=>x.themeCode===t.code).length} topik</div><div class="toolbar"><button class="small" onclick="addTheme('${esc(t.code)}')">Tambahkan</button><button class="small softbtn" onclick="showTheme('${esc(t.code)}')">Lihat topik</button></div></article>`).join("")||'<div class="empty">Tidak ada tema ditemukan.</div>'}
 $("catalogSearch").oninput=renderCatalog;$("catalogGroup").onchange=renderCatalog;
 function getSlideCount(){const x=$("slideCount").value;if(x!=="auto")return Number(x);return Math.max(6,Math.min(18,Math.round((plan?.duration||45)/5)))}
-function makeSlideData(n){const topics=plan.themes.flatMap(d=>d.topics||[]);const selectedTopics=topics;const slides=[];const intro={title:"Pembuka dan tujuan kegiatan",type:"opening",bullets:[`Sasaran: ${plan.group?.name||"Belum ditentukan"}`,`Situasi: ${plan.situation?.name||"Belum ditentukan"}`,`Tujuan: ${plan.goal?.name||"Belum ditentukan"}`]};slides.push(intro);
-const coreCount=Math.max(1,n-3);for(let i=0;i<coreCount;i++){const topic=selectedTopics[i%Math.max(1,selectedTopics.length)];if(topic)slides.push({title:topic.name,type:"source",topic,bullets:[topic.description,topic.outcome,topic.message].filter(Boolean)});else{const theme=plan.themes[i%plan.themes.length].theme;slides.push({title:theme.name,type:"source",theme,bullets:[theme.substance,theme.description,theme.outcome].filter(Boolean)})}}
-slides.push({title:"Penerapan dan aktivitas",type:"activity",bullets:["Aktivitas pembelajaran disesuaikan dengan kelompok sasaran dan konteks kegiatan.","Arahkan peserta menghubungkan pesan utama dengan situasi sehari-hari."]});
-slides.push({title:"Refleksi, evaluasi, dan penutup",type:"closing",bullets:[plan.goal?.evaluation||"Evaluasi hasil belajar sesuai tujuan perubahan.","Rangkum pesan utama dari materi sumber.","Sampaikan jalur bantuan atau rujukan yang telah diverifikasi."]});
-return slides.slice(0,n)}
-function sourceText(){return plan.themes.map(d=>{const t=d.theme;return `TEMA ${t.code}: ${t.name}\nSubstansi: ${t.substance}\nPenjelasan: ${t.description}\nOutput: ${t.outcome}\n${(d.topics||[]).map(x=>`TOPIK ${x.no}: ${x.name}\nPenjelasan: ${x.description}\nHasil: ${x.outcome}\nPesan kunci: ${x.message}`).join("\n\n")}\nEvidence terlacak:\n${(d.candidates||[]).map(e=>`- ${e.id} | ${e.group} | ${e.dimension} | ${e.substance}\n  Temuan: ${e.finding}\n  Referensi: ${e.reference}\n  URL/DOI: ${e.url}\n  Catatan sumber: ${e.traceNote}`).join("\n")}\nReferensi terlacak: ${(d.candidates||[]).length} sumber.`}).join("\n\n====================\n\n")}
-function buildMaster(slides){const style=$("visualStyle").value;return `MASTER BLUEPRINT PRESENTASI PENYULUHAN P4GN\n\nPERAN: Instructional designer dan perancang presentasi edukasi P4GN.\nSASARAN: ${plan.group?.name||""} (${plan.group?.code||""})\nSITUASI: ${plan.situation?.name||"Belum ditentukan"}\nFORMAT PENYAMPAIAN: ${plan.format?.name||"Fleksibel"}\nKARAKTER FORMAT: ${plan.format?.character||"Sesuaikan dengan kebutuhan kegiatan"}\nTUJUAN PERUBAHAN: ${plan.goal?.name||"Belum ditentukan"}\nDURASI: ${plan.duration} menit\nGAYA VISUAL: ${style}\nJUMLAH SLIDE: ${slides.length}\n\nATURAN SUBSTANSI WAJIB:\n1. Gunakan hanya substansi, topik, pesan kunci, dan hasil belajar yang tercantum pada DATA SUMBER.\n2. Jangan menambah fakta, angka, statistik, regulasi, kutipan, atau referensi yang tidak tersedia dalam sumber.\n3. Jangan mengubah makna atau memperluas klaim sumber. Bedakan saran pedagogis dengan fakta sumber.\n4. Jika data tidak tersedia, tulis [SUMBER BELUM TERSEDIA], jangan mengarang.\n5. Slide pembuka, aktivitas, dan penutup adalah struktur fasilitasi, bukan tempat menambahkan klaim faktual baru.\n6. Sesuaikan bahasa, contoh, metode, dan kompleksitas dengan kelompok sasaran. Hindari stigma, menakut-nakuti, dan glorifikasi perilaku berisiko.\n7. Visual, ilustrasi, komposisi, dan tata letak boleh kreatif; substansi wajib tetap setia pada sumber.\n8. Buat satu slide per prompt, bukan seluruh deck sekaligus, agar dapat diperiksa.\n\nKONTEKS & STRUKTUR SLIDE:\n${slides.map((s,i)=>`${i+1}. ${s.title}\nFokus: ${s.bullets.join(" | ")}`).join("\n\n")}\n\nDATA SUMBER ASLI:\n${sourceText()}\n\nINSTRUKSI OUTPUT: Tampilkan rancangan ringkas, lalu tunggu instruksi untuk membuat slide satu per satu. Setiap slide harus memuat judul, pesan utama, isi visual, ilustrasi/tata letak, dan catatan pembicara. Jangan mengklaim referensi yang tidak tercantum.`}
-function makeSlidePrompt(s,i,slides){return `P4GN PRESENTATION — SLIDE ${String(i+1).padStart(2,"0")} DARI ${slides.length}\n\nPERAN: Instructional designer dan perancang presentasi edukasi P4GN.\nJUDUL PRESENTASI: ${plan.themes.map(d=>d.theme.name).join("; ")}\nSASARAN: ${plan.group?.name||""}\nSITUASI: ${plan.situation?.name||""}\nTUJUAN PERUBAHAN: ${plan.goal?.name||""}\nDURASI KESELURUHAN: ${plan.duration} menit\nALOKASI SLIDE: Proporsional terhadap durasi.\nGAYA VISUAL: ${$("visualStyle").value}\n\nJUDUL SLIDE: ${s.title}\nFOKUS/POIN SUMBER:\n${s.bullets.map(x=>"- "+x).join("\n")}\n\nDATA SUMBER TERKAIT:\n${s.topic?`Topik: ${s.topic.name}\nPenjelasan: ${s.topic.description}\nHasil belajar: ${s.topic.outcome}\nPesan kunci: ${s.topic.message}`:sourceText()}\n\nATURAN WAJIB:\n- Pertahankan substansi dan pesan sumber; jangan menambah fakta, angka, regulasi, statistik, atau referensi di luar sumber.\n- Jika sumber tidak cukup, beri tanda [SUMBER BELUM TERSEDIA].\n- Jangan mengubah asosiasi menjadi sebab-akibat.\n- Rancang satu slide yang komunikatif, ringkas, visual, dan sesuai tahap perkembangan sasaran.\n- Buat judul, 3–5 poin isi maksimal, arahan visual/ilustrasi, tata letak, dan speaker notes.\n- Visual boleh dikembangkan, substansi tidak boleh digeser.\n- Jangan membuat slide lain; fokus hanya pada slide ini.`}
+function classifySlide_(topic,index,total){
+ const text=[topic?.name,topic?.description,topic?.message].join(' ').toLowerCase();
+ if(index===0)return {type:'opening',title:'Pembuka: mengapa topik ini penting?',focus:'Mengaitkan tema dengan konteks peserta',visual:'Satu ilustrasi utama yang relevan, judul kuat, ruang kosong'};
+ if(/data|angka|prevalensi|survei|statistik/.test(text))return {type:'data',title:topic.name,focus:'Membaca informasi secara kritis dan memahami batas interpretasi',visual:'Visual data konseptual tanpa angka rekaan; tampilkan konteks dan batas data'};
+ if(/risiko|protektif|pelindung|kerentanan/.test(text))return {type:'concept',title:topic.name,focus:'Memahami hubungan faktor risiko dan faktor pelindung tanpa menyederhanakan sebab-akibat',visual:'Diagram berlapis atau ekologi faktor; jangan menyalahkan individu/keluarga'};
+ if(/prosedur|respons|langkah|kebijakan|peran|rujukan/.test(text))return {type:'process',title:topic.name,focus:'Memahami peran dan urutan respons',visual:'Alur langkah ringkas berdasarkan sumber; jangan menambah prosedur yang belum tersedia'};
+ if(/istilah|penggolongan|narkotika|psikotropika|bahan adiktif/.test(text))return {type:'comparison',title:topic.name,focus:'Membedakan istilah secara tepat',visual:'Perbandingan visual sederhana; kategori dan batas definisi mengikuti sumber'};
+ if(index===total-1)return {type:'reflection',title:'Refleksi: pesan apa yang kita bawa?',focus:'Menguatkan satu pesan utama',visual:'Satu pertanyaan reflektif dan ilustrasi sederhana'};
+ return {type:'concept',title:topic.name,focus:'Membangun pemahaman inti secara bertahap',visual:'Satu metafora visual atau ilustrasi situasional yang menjelaskan gagasan'};
+}
+function makeSlideData(n){
+ const topics=plan.themes.flatMap(d=>d.topics||[]).filter(t=>t.name||t.message);
+ const slides=[];
+ slides.push({title:'Pembuka: mengapa topik ini penting?',type:'opening',focus:'Menghubungkan tema dengan kehidupan dan konteks peserta.',visual:'Ilustrasi hero sesuai sasaran dan konteks; jangan menambahkan klaim faktual.',bullets:[`Penyuluhan P4GN: ${plan.themes.map(d=>d.theme.name).join('; ')}`,`Sasaran: ${plan.group?.name||'Belum ditentukan'}`]});
+ const coreCount=Math.max(1,n-2);
+ for(let i=0;i<coreCount;i++){
+  const topic=topics[i%Math.max(1,topics.length)];
+  if(topic){const a=classifySlide_(topic,i+1,n);slides.push({...a,topic,bullets:[topic.message||topic.name,topic.description,topic.outcome].filter(Boolean)});}
+  else {const d=plan.themes[(i)%plan.themes.length],t=d.theme;slides.push({title:t.name,type:'concept',focus:t.substance,visual:'Satu visual penjelas yang sesuai substansi.',theme:t,bullets:[t.substance,t.description,t.outcome].filter(Boolean)});}
+ }
+ slides.push({title:'Penegasan dan refleksi',type:'closing',focus:'Merangkum pesan utama dan mengajak peserta merefleksikan pembelajaran.',visual:'Satu kalimat kunci dan satu pertanyaan reflektif.',bullets:[plan.goal?.name||'Tujuan pembelajaran', 'Apa satu hal penting yang akan kita ingat dari pembahasan ini?']});
+ return slides.slice(0,n);
+}
+function sourceText(){return plan.themes.map(d=>{const t=d.theme;return `TEMA SUMBER: ${t.name}
+Substansi: ${t.substance}
+Penjelasan: ${t.description}
+Hasil yang diharapkan: ${t.outcome}
+PESAN KUNCI TOPIK:
+${(d.topics||[]).map(x=>`- ${x.name}
+  Penjelasan sumber: ${x.description}
+  Hasil belajar: ${x.outcome}
+  Pesan kunci: ${x.message}`).join("\n\n")}
+EVIDENCE TERLACAK (gunakan hanya bila relevan dan statusnya memungkinkan):
+${(d.candidates||[]).map(e=>`- ${e.substance}
+  Temuan: ${e.finding}
+  Referensi: ${e.reference}
+  Status audit: ${e.audit}
+  Keputusan penggunaan: ${e.decision}
+  Catatan: ${e.traceNote}`).join("\n")}
+BATAS: Evidence migrasi bukan otomatis bukti tervalidasi; jangan memperluas klaim.`}).join("\n\n====================\n\n")}
+function buildMaster(slides){const style=$("visualStyle").value;return `PENA — PRESENTATION INTELLIGENCE | MASTER BLUEPRINT
+
+PERAN: Bertindak sebagai instructional designer, penulis narasi penyuluhan, dan perancang presentasi P4GN.
+JUDUL PRESENTASI: ${plan.themes.map(d=>d.theme.name).join("; ")}
+SASARAN: ${plan.group?.name||""}
+SITUASI: ${plan.situation?.name||"Belum ditentukan"}
+FORMAT: ${plan.format?.name||"Fleksibel"}
+TUJUAN PERUBAHAN: ${plan.goal?.name||"Belum ditentukan"}
+DURASI: ${plan.duration} menit | JUMLAH SLIDE: ${slides.length}
+GAYA VISUAL: ${style} | FORMAT LAYAR: 16:9
+
+PRINSIP UTAMA
+1. Database adalah sumber substansi, bukan naskah yang harus disalin mentah ke layar. Terjemahkan gagasan menjadi bahasa presentasi yang alami, menarik, dan sesuai sasaran.
+2. Pertahankan istilah, pesan kunci, batas klaim, dan makna sumber. Jangan mengubah asosiasi menjadi sebab-akibat.
+3. Jangan menambahkan fakta, angka, regulasi, statistik, atau referensi di luar sumber. Jika perlu informasi yang tidak tersedia, tulis [SUMBER BELUM TERSEDIA].
+4. Bedakan teks layar yang ringkas dengan speaker notes yang menjelaskan. Jangan memindahkan seluruh uraian database ke slide.
+5. Satu slide satu gagasan utama. Gunakan visual instruksional yang membantu memahami gagasan, bukan dekorasi atau kotak-kotak teks.
+6. Pilih bentuk visual sesuai fungsi: pembuka=hero visual; konsep=metafora/diagram; risiko-protektif=lapisan/ekologi; data=visual data dengan batas interpretasi; proses=alur; perbandingan=dua sisi; refleksi=pertanyaan besar.
+7. Bahasa nonstigmatis, tidak menakut-nakuti, dan sesuai usia serta konteks peserta.
+8. Contoh tambahan hanya boleh berupa ilustrasi hipotetis dan harus diberi label.
+9. Jangan tampilkan kode tema, kode PK, ID evidence, nomor baris, nama sheet, atau istilah database pada slide peserta.
+10. Jangan menampilkan catatan penyuluh atau instruksi desain pada slide peserta.
+
+ALUR PEMBELAJARAN SLIDE
+${slides.map((s,i)=>`${i+1}. ${s.title}
+Fungsi: ${s.focus}
+Arah visual: ${s.visual}
+Sumber/pesan: ${s.bullets.join(" | ")}`).join("\n\n")}
+
+DATA SUMBER YANG MENJADI BATAS SUBSTANSI
+${sourceText()}
+
+INSTRUKSI: Buat slide satu per satu saat diminta. Hasilkan slide final yang benar-benar layak ditampilkan, bukan katalog materi. Setiap slide disertai speaker notes terpisah.`}
+function makeSlidePrompt(s,i,slides){const d=s.topic?plan.themes.find(x=>(x.topics||[]).some(t=>t.id===s.topic.id)):null;return `P4GN PRESENTATION — SLIDE ${String(i+1).padStart(2,"0")} DARI ${slides.length}
+
+KONTEKS
+Judul presentasi: ${plan.themes.map(d=>d.theme.name).join("; ")}
+Sasaran: ${plan.group?.name||""}
+Situasi: ${plan.situation?.name||""}
+Tujuan perubahan: ${plan.goal?.name||""}
+Durasi keseluruhan: ${plan.duration} menit
+Alokasi slide: Proporsional terhadap durasi
+Gaya visual: ${$("visualStyle").value}
+Format: 16:9
+
+FUNGSI SLIDE
+${s.focus||"Membangun pemahaman peserta."}
+
+JUDUL SLIDE
+${s.title}
+
+PESAN SUMBER YANG WAJIB DIPERTAHANKAN
+${s.bullets.map(x=>"- "+x).join("\n")}
+
+ARAHAN DESAIN INSTRUKSIONAL
+- Buat satu slide presentasi yang secara visual menjelaskan gagasan, bukan menyalin daftar dari spreadsheet.
+- Arah visual yang disarankan: ${s.visual||"Pilih satu visual penjelas sesuai gagasan."}
+- Tampilkan maksimal 3–5 poin ringkas; bila sumber padat, prioritaskan satu pesan utama dan pindahkan uraian ke narasi.
+- Gunakan hierarki visual, ruang kosong, ilustrasi yang relevan, dan komposisi profesional.
+- Jangan menampilkan kode modul, kode PK, ID referensi, nomor baris, atau istilah database.
+
+CATATAN NARASI PRESENTER
+Buat narasi lisan singkat yang menjelaskan pesan slide, menghubungkan antar gagasan, dan tidak menambah klaim di luar sumber. Narasi tidak perlu ditampilkan di layar.
+
+BATAS SUMBER
+${s.topic?`Topik: ${s.topic.name}
+Penjelasan: ${s.topic.description}
+Hasil belajar: ${s.topic.outcome}
+Pesan kunci: ${s.topic.message}`:sourceText()}
+
+ATURAN WAJIB
+1. Pertahankan substansi, istilah, dan pesan sumber.
+2. Jangan menambah fakta, angka, regulasi, statistik, atau referensi.
+3. Jika sumber tidak cukup, tulis [SUMBER BELUM TERSEDIA].
+4. Jangan mengubah asosiasi menjadi sebab-akibat.
+5. Jangan menstigma, menyalahkan korban/keluarga, atau menakut-nakuti.
+6. Hasilkan hanya SATU slide final beserta speaker notes terpisah. Jangan membuat slide lain.`}
 
 function makeGuideSchedule(total,formatName,situationName){
  const f=(formatName||"").toLowerCase(), sit=(situationName||"").toLowerCase();
