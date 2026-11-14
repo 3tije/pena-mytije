@@ -73,7 +73,7 @@ footer{text-align:center;color:#818a9b;font-size:11px;padding:20px}
 <section id="about" class="page"><div class="panel"><h2>Tentang PENA</h2><p>PENA adalah sistem penyusunan bahan presentasi penyuluhan narkoba berbasis database materi dan pemetaan konteks. Sistem menyimpan struktur pengetahuan dan menyusun prompt presentasi; proses generasi visual dilakukan pada aplikasi AI yang dipilih pengguna, misalnya ChatGPT.</p><div class="statrow" id="dbStats"></div><h3>Prinsip penggunaan</h3><ul><li>Substansi materi dan pesan sumber dipertahankan sesuai database.</li><li>AI eksternal tidak boleh menambahkan fakta, angka, regulasi, statistik, atau referensi yang tidak terdapat dalam sumber terpilih.</li><li>Visual, ilustrasi, komposisi, dan tata letak boleh dikembangkan tanpa mengubah substansi.</li><li>Pilihan materi disesuaikan dengan konteks kegiatan dan sumber yang tersedia.</li><li>Hasil akhir tetap diperiksa oleh penyuluh sebelum digunakan.</li></ul><div class="notice">PENA menyiapkan rancangan dan prompt presentasi agar dapat dikembangkan lebih lanjut oleh penyuluh.</div></div></section>
 </main><a class="tmt-float" href="../tmt.html" aria-label="Buka Tanya Om Tije"><img src="assets/tanya-om-tije-badge.webp" alt="Tanya Om Tije"><span class="tmt-float-label">Tanya Om Tije</span></a><footer>PENA • Bahan Presentasi Penyuluhan Narkoba</footer>
 <script>
-/* SET API_URL setelah backend Apps Script PENA dideploy */
+/* PENA Presentation Engine v2.3 — UI dipertahankan; mesin slide diperbarui */
 const API_URL="https://script.google.com/macros/s/AKfycbzFirihxDIn9hc8hfLD95S6TpCoK10MWlz4VoAmk507m5w9TIAMS81wx2vc8H7tdRZ64g/exec";
 let db=null, selected=[], details={}, plan=null, masterPrompt="",guidePrompt="";
 const $=id=>document.getElementById(id);
@@ -122,123 +122,232 @@ $("goStudio").onclick=()=>switchPage("studio");
 function renderCatalog(){const q=($("catalogSearch").value||"").toLowerCase(),g=$("catalogGroup").value;const rel=window._themeGroup||[];const list=db.themes.filter(t=>{const text=[t.code,t.name,t.substance,t.description,t.outcome,t.pillar,...t.pks.flatMap(p=>[p.message,p.detail]),...db.topics.filter(x=>x.themeCode===t.code).map(x=>x.name)].join(" ").toLowerCase();return(!q||text.includes(q))&&(!g||((window._themeGroup||[]).some(r=>r.themeCode===t.code&&String(r.groupCode||'').toUpperCase()===g.toUpperCase())))});$("catalogCount").textContent=list.length+" tema";$("catalogList").innerHTML=list.map(t=>`<article class="theme-card"><div class="code">${esc(t.duration||"")}</div><h3>${esc(t.name)}</h3><p>${esc(t.substance)}</p><div class="hint">${db.topics.filter(x=>x.themeCode===t.code).length} topik</div><div class="toolbar"><button class="small" onclick="addTheme('${esc(t.code)}')">Tambahkan</button><button class="small softbtn" onclick="showTheme('${esc(t.code)}')">Lihat topik</button></div></article>`).join("")||'<div class="empty">Tidak ada tema ditemukan.</div>'}
 $("catalogSearch").oninput=renderCatalog;$("catalogGroup").onchange=renderCatalog;
 function getSlideCount(){const x=$("slideCount").value;if(x!=="auto")return Number(x);return Math.max(6,Math.min(18,Math.round((plan?.duration||45)/5)))}
-function classifySlide_(topic,index,total){
- const text=[topic?.name,topic?.description,topic?.message].join(' ').toLowerCase();
- if(index===0)return {type:'opening',title:'Pembuka: mengapa topik ini penting?',focus:'Mengaitkan tema dengan konteks peserta',visual:'Satu ilustrasi utama yang relevan, judul kuat, ruang kosong'};
- if(/data|angka|prevalensi|survei|statistik/.test(text))return {type:'data',title:topic.name,focus:'Membaca informasi secara kritis dan memahami batas interpretasi',visual:'Visual data konseptual tanpa angka rekaan; tampilkan konteks dan batas data'};
- if(/risiko|protektif|pelindung|kerentanan/.test(text))return {type:'concept',title:topic.name,focus:'Memahami hubungan faktor risiko dan faktor pelindung tanpa menyederhanakan sebab-akibat',visual:'Diagram berlapis atau ekologi faktor; jangan menyalahkan individu/keluarga'};
- if(/prosedur|respons|langkah|kebijakan|peran|rujukan/.test(text))return {type:'process',title:topic.name,focus:'Memahami peran dan urutan respons',visual:'Alur langkah ringkas berdasarkan sumber; jangan menambah prosedur yang belum tersedia'};
- if(/istilah|penggolongan|narkotika|psikotropika|bahan adiktif/.test(text))return {type:'comparison',title:topic.name,focus:'Membedakan istilah secara tepat',visual:'Perbandingan visual sederhana; kategori dan batas definisi mengikuti sumber'};
- if(index===total-1)return {type:'reflection',title:'Refleksi: pesan apa yang kita bawa?',focus:'Menguatkan satu pesan utama',visual:'Satu pertanyaan reflektif dan ilustrasi sederhana'};
- return {type:'concept',title:topic.name,focus:'Membangun pemahaman inti secara bertahap',visual:'Satu metafora visual atau ilustrasi situasional yang menjelaskan gagasan'};
+function uniqueBy_(arr,keyFn){
+ const seen=new Set();
+ return (arr||[]).filter(x=>{const k=keyFn(x);if(!k||seen.has(k))return false;seen.add(k);return true;});
 }
 function makeSlideData(n){
- const topics=plan.themes.flatMap(d=>d.topics||[]).filter(t=>t.name||t.message);
+ const themeDetails=plan.themes||[];
+ const themes=themeDetails.map(d=>d.theme||{}).filter(t=>t.name);
+ const topics=uniqueBy_(themeDetails.flatMap(d=>(d.topics||[]).map(t=>({...t,themeName:d.theme?.name,themeCode:d.theme?.code}))),
+   t=>String(t.id||t.no||t.name||""));
+ const evidence=uniqueBy_(themeDetails.flatMap(d=>d.candidates||[]),e=>String(e.id||e.reference||e.substance||""));
+ const target=Math.max(6,Math.min(18,Number(n)||9));
  const slides=[];
- slides.push({title:'Pembuka: mengapa topik ini penting?',type:'opening',focus:'Menghubungkan tema dengan kehidupan dan konteks peserta.',visual:'Ilustrasi hero sesuai sasaran dan konteks; jangan menambahkan klaim faktual.',bullets:[`Penyuluhan P4GN: ${plan.themes.map(d=>d.theme.name).join('; ')}`,`Sasaran: ${plan.group?.name||'Belum ditentukan'}`]});
- const coreCount=Math.max(1,n-2);
- for(let i=0;i<coreCount;i++){
-  const topic=topics[i%Math.max(1,topics.length)];
-  if(topic){const a=classifySlide_(topic,i+1,n);slides.push({...a,topic,bullets:[topic.message||topic.name,topic.description,topic.outcome].filter(Boolean)});}
-  else {const d=plan.themes[(i)%plan.themes.length],t=d.theme;slides.push({title:t.name,type:'concept',focus:t.substance,visual:'Satu visual penjelas yang sesuai substansi.',theme:t,bullets:[t.substance,t.description,t.outcome].filter(Boolean)});}
- }
- slides.push({title:'Penegasan dan refleksi',type:'closing',focus:'Merangkum pesan utama dan mengajak peserta merefleksikan pembelajaran.',visual:'Satu kalimat kunci dan satu pertanyaan reflektif.',bullets:[plan.goal?.name||'Tujuan pembelajaran', 'Apa satu hal penting yang akan kita ingat dari pembahasan ini?']});
- return slides.slice(0,n);
-}
-function sourceText(){return plan.themes.map(d=>{const t=d.theme;return `TEMA SUMBER: ${t.name}
-Substansi: ${t.substance}
-Penjelasan: ${t.description}
-Hasil yang diharapkan: ${t.outcome}
-PESAN KUNCI TOPIK:
-${(d.topics||[]).map(x=>`- ${x.name}
-  Penjelasan sumber: ${x.description}
-  Hasil belajar: ${x.outcome}
-  Pesan kunci: ${x.message}`).join("\n\n")}
-EVIDENCE TERLACAK (gunakan hanya bila relevan dan statusnya memungkinkan):
-${(d.candidates||[]).map(e=>`- ${e.substance}
-  Temuan: ${e.finding}
-  Referensi: ${e.reference}
-  Status audit: ${e.audit}
-  Keputusan penggunaan: ${e.decision}
-  Catatan: ${e.traceNote}`).join("\n")}
-BATAS: Evidence migrasi bukan otomatis bukti tervalidasi; jangan memperluas klaim.`}).join("\n\n====================\n\n")}
-function buildMaster(slides){const style=$("visualStyle").value;return `PENA — PRESENTATION INTELLIGENCE | MASTER BLUEPRINT
+ const add=(title,type,focus,bullets,extra={})=>slides.push({title,type,focus,bullets:(bullets||[]).filter(Boolean),...extra});
 
-PERAN: Bertindak sebagai instructional designer, penulis narasi penyuluhan, dan perancang presentasi P4GN.
-JUDUL PRESENTASI: ${plan.themes.map(d=>d.theme.name).join("; ")}
+ add("Pembuka: mengapa isu ini penting?","opening",
+   "Mengaitkan isu dengan pengalaman dan kebutuhan peserta.",
+   [`Tema penyuluhan: ${themes.map(t=>t.name).join("; ")}`,
+    `Sasaran: ${plan.group?.name||"Belum ditentukan"}`,
+    `Konteks: ${plan.situation?.name||"Belum ditentukan"}`]);
+
+ add("Tujuan belajar dan pertanyaan pemantik","learning-goal",
+   "Membuat peserta memahami arah dan hasil belajar.",
+   [`Tujuan perubahan: ${plan.goal?.outcome||plan.goal?.name||"Belum dirumuskan"}`,
+    "Apa yang perlu diketahui dan mampu dilakukan peserta setelah sesi ini?"]);
+
+ add("Memahami fenomena dalam konteks peserta","context",
+   "Menghubungkan tema dengan situasi nyata tanpa membuat klaim yang tidak bersumber.",
+   themes.map(t=>t.substance).filter(Boolean).slice(0,3).length
+    ? themes.map(t=>t.substance).filter(Boolean).slice(0,3)
+    : ["Jelaskan fenomena berdasarkan sumber yang tersedia.","Jika data belum tersedia, jangan menambahkan angka atau generalisasi."]);
+
+ if(evidence.length){
+   const e=evidence[0];
+   add("Apa yang ditunjukkan oleh evidence?","evidence",
+     "Menyajikan temuan dan batas bukti secara proporsional.",
+     [e.substance,e.finding?`Temuan/cuplikan: ${e.finding}`:"",
+      e.reference?`Sumber: ${e.reference}`:"[REFERENSI BELUM LENGKAP]",
+      e.verification?`Status verifikasi: ${e.verification}`:"Status verifikasi belum tercatat."],
+     {evidence:e});
+ }else{
+   add("Peta bukti: apa yang sudah dan belum diketahui?","evidence-gap",
+     "Membedakan substansi konseptual dari bukti empiris.",
+     ["Belum ada evidence yang terhubung pada tema terpilih.",
+      "[SUMBER BELUM TERSEDIA] Jangan mengisi kekosongan dengan angka, statistik, atau klaim.",
+      "Lengkapi sumber resmi/ilmiah sebelum menyampaikan klaim faktual."]);
+ }
+
+ // Theory slides: each distinct theory appears at most once.
+ topics.forEach(t=>{
+   add(`Teori/konsep: ${t.name}`,"theory",
+     "Menjelaskan konstruk, mekanisme, relevansi, dan keterbatasan teori.",
+     [t.description,
+      t.message?`Mekanisme/konstruk: ${t.message}`:"",
+      t.outcome?`Relevansi untuk P4GN: ${t.outcome}`:"",
+      t.limitations?`Keterbatasan: ${t.limitations}`:"",
+      t.sourceReference?`Rujukan: ${t.sourceReference}`:"[RUJUKAN PRIMER BELUM TERCATAT]"],
+     {topic:t});
+ });
+
+ themes.forEach(t=>{
+   add(`Penerapan pada tema: ${t.name}`,"application",
+     "Menerjemahkan konsep menjadi pemahaman yang sesuai konteks sasaran.",
+     [t.substance,t.description,t.limits?`Batas penggunaan: ${t.limits}`:""],
+     {theme:t});
+ });
+
+ add("Analisis kasus dan pengambilan keputusan","case",
+   "Menggunakan teori untuk membaca situasi, bukan untuk memberi label atau diagnosis.",
+   ["Gunakan skenario hipotetis yang relevan dengan peserta.",
+    "Identifikasi faktor individu, relasi, lingkungan, dan dukungan.",
+    "Gunakan teori yang sudah dijelaskan untuk menimbang pilihan yang tersedia.",
+    "Pisahkan ilustrasi hipotetis dari fakta empiris."]);
+
+ const skills=uniqueBy_(themeDetails.flatMap(d=>d.skills||[]),
+   x=>String(x.id||x.name||x.description||""));
+ add("Keterampilan dan dukungan protektif","skills",
+   "Mengubah pemahaman menjadi tindakan yang realistis.",
+   [...skills.map(x=>x.name||x.description||x.skill).filter(Boolean).slice(0,4),
+    "Tentukan dukungan dan jalur bantuan yang relevan serta telah diverifikasi."]);
+
+ add("Refleksi dan tindak lanjut","closing",
+   "Menegaskan pembelajaran dan mengajak peserta menentukan langkah berikutnya.",
+   [plan.goal?.evaluation||"Periksa kembali pemahaman sesuai tujuan kegiatan.",
+    "Apa satu pemahaman penting yang akan dibawa setelah sesi ini?",
+    "Apa satu tindakan realistis yang dapat dilakukan setelah kegiatan?"]);
+
+ const closing=slides.pop();
+ const fillers=[
+  ["Membedakan fakta, opini, dan mitos","literacy",["Pilih satu klaim yang beredar di lingkungan peserta.","Periksa penulis, tanggal, bukti, dan konteks klaim.","Jangan menyimpulkan benar/salah tanpa sumber yang dapat ditelusuri."]],
+  ["Peta lingkungan dan dukungan","support-map",["Petakan dukungan dari teman, keluarga, kampus/sekolah, komunitas, dan layanan.","Bedakan hal yang dapat dilakukan individu dan hal yang membutuhkan dukungan sistem."]],
+  ["Diskusi kelompok: membaca situasi","discussion",["Diskusikan skenario yang diberikan fasilitator.","Gunakan konsep yang telah dibahas untuk menjelaskan pilihan.","Hindari stigma dan menyalahkan individu."]],
+  ["Cek pemahaman peserta","assessment",["Minta peserta menjelaskan satu konsep dengan kata-kata sendiri.","Gunakan pertanyaan singkat sesuai tujuan belajar."]],
+  ["Rangkuman pesan utama","synthesis",["Hubungkan pengetahuan, keputusan, relasi sosial, dan lingkungan.","Pilih pesan yang benar-benar didukung materi dan sumber."]],
+  ["Rencana tindakan sederhana","action",["Tentukan satu tindakan personal atau kolektif yang realistis.","Pastikan dukungan dan rujukan yang disebutkan telah diverifikasi."]]
+ ];
+ let fi=0;
+ while(slides.length<target-1 && fi<fillers.length){
+   const f=fillers[fi++];
+   add(f[0],f[1],"Aktivitas pembelajaran untuk memperkuat pemahaman.",f[2]);
+ }
+ slides.push(closing);
+
+ if(slides.length>target){
+   const first=slides.slice(0,Math.min(3,target-1));
+   const last=slides[slides.length-1];
+   const middle=slides.slice(first.length,-1);
+   return first.concat(middle.slice(0,Math.max(0,target-first.length-1)),[last]);
+ }
+ return slides;
+}
+
+function sourceText(){
+ return (plan.themes||[]).map(d=>{
+   const t=d.theme||{};
+   const theory=(d.topics||[]).map(x=>
+    `TEORI/KONSEP: ${x.name||""}\nJenis: ${x.kind||""}\nPenjelasan inti: ${x.description||""}\nMekanisme/konstruk: ${x.message||""}\nKegunaan P4GN: ${x.outcome||""}\nKeterbatasan: ${x.limitations||""}\nRujukan primer: ${x.sourceReference||"[BELUM TERCATAT]"}\nURL/DOI: ${x.sourceUrl||""}`
+   ).join("\n\n");
+   const ev=(d.candidates||[]).map(e=>
+    `- ${e.id||""} | ${e.dimension||""}\n  Klaim/temuan: ${e.substance||""}\n  Cuplikan: ${e.finding||""}\n  Referensi: ${e.reference||"[REFERENSI BELUM LENGKAP]"}\n  URL/DOI: ${e.url||""}\n  Verifikasi: ${e.verification||"Belum diketahui"}\n  Batas generalisasi: ${e.traceNote||""}`
+   ).join("\n");
+   const refs=(d.sourceCandidates||[]).map(s=>
+    `- ${s.author||""} (${s.year||""}). ${s.title||""}. Bagian: ${s.pages||"belum ditentukan"}. URL: ${s.url||""}. Status: ${s.verification||"belum diverifikasi"}`
+   ).join("\n");
+   return `TEMA: ${t.name||""}\nSubstansi: ${t.substance||""}\nUraian: ${t.description||""}\nBatas penggunaan: ${t.limits||""}\n\nTEORI DAN KONSEP:\n${theory||"[BELUM ADA TEORI TERHUBUNG]"}\n\nEVIDENCE:\n${ev||"[BELUM ADA EVIDENCE TERHUBUNG]"}\n\nSUMBER:\n${refs||"[BELUM ADA SUMBER TERHUBUNG]"}`;
+ }).join("\n\n============================\n\n");
+}
+
+function buildMaster(slides){
+ return `PENA — MASTER BLUEPRINT PRESENTASI PENYULUHAN P4GN
+
 SASARAN: ${plan.group?.name||""}
 SITUASI: ${plan.situation?.name||"Belum ditentukan"}
 FORMAT: ${plan.format?.name||"Fleksibel"}
-TUJUAN PERUBAHAN: ${plan.goal?.name||"Belum ditentukan"}
+TUJUAN: ${plan.goal?.name||"Belum ditentukan"}
 DURASI: ${plan.duration} menit | JUMLAH SLIDE: ${slides.length}
-GAYA VISUAL: ${style} | FORMAT LAYAR: 16:9
+GAYA VISUAL: ${$("visualStyle").value} | FORMAT: 16:9
 
-PRINSIP UTAMA
-1. Database adalah sumber substansi, bukan naskah yang harus disalin mentah ke layar. Terjemahkan gagasan menjadi bahasa presentasi yang alami, menarik, dan sesuai sasaran.
-2. Pertahankan istilah, pesan kunci, batas klaim, dan makna sumber. Jangan mengubah asosiasi menjadi sebab-akibat.
-3. Jangan menambahkan fakta, angka, regulasi, statistik, atau referensi di luar sumber. Jika perlu informasi yang tidak tersedia, tulis [SUMBER BELUM TERSEDIA].
-4. Bedakan teks layar yang ringkas dengan speaker notes yang menjelaskan. Jangan memindahkan seluruh uraian database ke slide.
-5. Satu slide satu gagasan utama. Gunakan visual instruksional yang membantu memahami gagasan, bukan dekorasi atau kotak-kotak teks.
-6. Pilih bentuk visual sesuai fungsi: pembuka=hero visual; konsep=metafora/diagram; risiko-protektif=lapisan/ekologi; data=visual data dengan batas interpretasi; proses=alur; perbandingan=dua sisi; refleksi=pertanyaan besar.
-7. Bahasa nonstigmatis, tidak menakut-nakuti, dan sesuai usia serta konteks peserta.
-8. Contoh tambahan hanya boleh berupa ilustrasi hipotetis dan harus diberi label.
-9. Jangan tampilkan kode tema, kode PK, ID evidence, nomor baris, nama sheet, atau istilah database pada slide peserta.
-10. Jangan menampilkan catatan penyuluh atau instruksi desain pada slide peserta.
+ATURAN:
+1. Setiap slide memiliki fungsi pembelajaran berbeda; jangan mengulang tema atau teori.
+2. Jelaskan teori melalui konstruk, mekanisme, relevansi, keterbatasan, dan rujukan.
+3. Teori bukan evidence empiris dan tidak membuktikan efektivitas intervensi.
+4. Klaim faktual hanya boleh berasal dari evidence yang tercantum.
+5. Jangan membuat angka, statistik, regulasi, kutipan, atau referensi.
+6. Jika sumber tidak tersedia, tulis [SUMBER BELUM TERSEDIA].
+7. Bedakan teks layar ringkas dengan speaker notes.
+8. Gunakan bahasa nonstigmatis dan sesuai sasaran.
+9. Jangan mengarang nomor halaman atau detail bibliografi.
 
-ALUR PEMBELAJARAN SLIDE
-${slides.map((s,i)=>`${i+1}. ${s.title}
-Fungsi: ${s.focus}
-Arah visual: ${s.visual}
-Sumber/pesan: ${s.bullets.join(" | ")}`).join("\n\n")}
+ALUR SLIDE:
+${slides.map((s,i)=>`${i+1}. ${s.title}\nFungsi: ${s.focus}\nIsi:\n${s.bullets.map(x=>"- "+x).join("\n")}`).join("\n\n")}
 
-DATA SUMBER YANG MENJADI BATAS SUBSTANSI
+DATA SUMBER DATABASE:
 ${sourceText()}
 
-INSTRUKSI: Buat slide satu per satu saat diminta. Hasilkan slide final yang benar-benar layak ditampilkan, bukan katalog materi. Setiap slide disertai speaker notes terpisah.`}
-function makeSlidePrompt(s,i,slides){const d=s.topic?plan.themes.find(x=>(x.topics||[]).some(t=>t.id===s.topic.id)):null;return `P4GN PRESENTATION — SLIDE ${String(i+1).padStart(2,"0")} DARI ${slides.length}
+OUTPUT: Untuk setiap slide hasilkan pesan utama, 3–5 poin, visual/diagram, tata letak, speaker notes, sitasi, dan catatan keterbatasan bukti.`;
+}
+
+function makeSlidePrompt(s,i,slides){
+ const related=s.topic
+  ? `TEORI/KONSEP: ${s.topic.name}\nPenjelasan: ${s.topic.description||""}\nMekanisme: ${s.topic.message||""}\nKegunaan: ${s.topic.outcome||""}\nKeterbatasan: ${s.topic.limitations||""}\nRujukan: ${s.topic.sourceReference||"[BELUM TERCATAT]"}\nURL/DOI: ${s.topic.sourceUrl||""}`
+  : s.evidence
+   ? `EVIDENCE: ${s.evidence.substance||""}\nTemuan: ${s.evidence.finding||""}\nReferensi: ${s.evidence.reference||"[BELUM LENGKAP]"}\nURL: ${s.evidence.url||""}\nVerifikasi: ${s.evidence.verification||"Belum diketahui"}`
+   : s.theme
+    ? `TEMA: ${s.theme.name}\nSubstansi: ${s.theme.substance||""}\nUraian: ${s.theme.description||""}\nBatas penggunaan: ${s.theme.limits||""}`
+    : sourceText();
+ return `P4GN PRESENTATION — SLIDE ${String(i+1).padStart(2,"0")} DARI ${slides.length}
 
 KONTEKS
-Judul presentasi: ${plan.themes.map(d=>d.theme.name).join("; ")}
+Judul: ${(plan.themes||[]).map(d=>d.theme?.name).filter(Boolean).join("; ")}
 Sasaran: ${plan.group?.name||""}
 Situasi: ${plan.situation?.name||""}
-Tujuan perubahan: ${plan.goal?.name||""}
-Durasi keseluruhan: ${plan.duration} menit
-Alokasi slide: Proporsional terhadap durasi
+Tujuan: ${plan.goal?.name||""}
+Durasi: ${plan.duration} menit
 Gaya visual: ${$("visualStyle").value}
 Format: 16:9
 
-FUNGSI SLIDE
-${s.focus||"Membangun pemahaman peserta."}
-
-JUDUL SLIDE
+FUNGSI PEMBELAJARAN
+${s.focus}
+JUDUL
 ${s.title}
 
-PESAN SUMBER YANG WAJIB DIPERTAHANKAN
+POIN YANG HARUS DIKEMBANGKAN
 ${s.bullets.map(x=>"- "+x).join("\n")}
 
-ARAHAN DESAIN INSTRUKSIONAL
-- Buat satu slide presentasi yang secara visual menjelaskan gagasan, bukan menyalin daftar dari spreadsheet.
-- Arah visual yang disarankan: ${s.visual||"Pilih satu visual penjelas sesuai gagasan."}
-- Tampilkan maksimal 3–5 poin ringkas; bila sumber padat, prioritaskan satu pesan utama dan pindahkan uraian ke narasi.
-- Gunakan hierarki visual, ruang kosong, ilustrasi yang relevan, dan komposisi profesional.
-- Jangan menampilkan kode modul, kode PK, ID referensi, nomor baris, atau istilah database.
-
-CATATAN NARASI PRESENTER
-Buat narasi lisan singkat yang menjelaskan pesan slide, menghubungkan antar gagasan, dan tidak menambah klaim di luar sumber. Narasi tidak perlu ditampilkan di layar.
-
-BATAS SUMBER
-${s.topic?`Topik: ${s.topic.name}
-Penjelasan: ${s.topic.description}
-Hasil belajar: ${s.topic.outcome}
-Pesan kunci: ${s.topic.message}`:sourceText()}
+LANDASAN SUMBER
+${related}
 
 ATURAN WAJIB
-1. Pertahankan substansi, istilah, dan pesan sumber.
-2. Jangan menambah fakta, angka, regulasi, statistik, atau referensi.
-3. Jika sumber tidak cukup, tulis [SUMBER BELUM TERSEDIA].
-4. Jangan mengubah asosiasi menjadi sebab-akibat.
-5. Jangan menstigma, menyalahkan korban/keluarga, atau menakut-nakuti.
-6. Hasilkan hanya SATU slide final beserta speaker notes terpisah. Jangan membuat slide lain.`}
+- Buat satu slide ini saja; jangan mengulang isi slide lain.
+- Jelaskan teori melalui konstruk dan mekanisme, bukan hanya nama.
+- Pisahkan teori dari evidence empiris.
+- Jangan menambah fakta, angka, regulasi, statistik, kutipan, atau referensi.
+- Jika sumber tidak tersedia, tulis [SUMBER BELUM TERSEDIA].
+- Jangan mengarang halaman atau metadata referensi.
+- Hasilkan judul, pesan utama, 3–5 poin, arahan visual, tata letak, speaker notes, dan sitasi.
+- Hindari stigma, fear appeal berlebihan, dan penyederhanaan sebab-akibat.`;
+}
+
+function buildBlueprint(){
+ if(!plan||!plan.themes?.length){
+  $("blueprintStatus").textContent="Susun rancangan penyuluhan dan pilih tema terlebih dahulu.";
+  return;
+ }
+ try{
+  const slides=makeSlideData(getSlideCount());
+  masterPrompt=buildMaster(slides);
+  buildGuide();
+  $("studioContext").textContent=`Sasaran: ${plan.group?.name||"-"} • Situasi: ${plan.situation?.name||"-"} • Tujuan: ${plan.goal?.name||"-"} • ${plan.duration} menit • ${plan.themes.length} tema terpilih.`;
+  $("blueprintOutput").innerHTML=`<div class="notice success">Master Blueprint siap. Setiap slide memiliki fungsi berbeda; teori, evidence, dan sumber dipisahkan.</div><div class="slideprompt">${esc(masterPrompt)}</div>`;
+  window.slidePrompts=slides.map((s,i)=>makeSlidePrompt(s,i,slides));
+  $("slideList").innerHTML=slides.map((s,i)=>`<article class="slide">
+   <div class="sectionhead"><span class="tag">SLIDE ${String(i+1).padStart(2,"0")}</span>
+   <button class="small" onclick="copyText(window.slidePrompts[${i}],'Prompt slide disalin',this)">Salin Prompt Slide ${String(i+1).padStart(2,"0")}</button></div>
+   <h3>${esc(s.title)}</h3><ul>${s.bullets.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+   <p class="hint">${esc(s.focus)}</p><details><summary class="hint">Lihat prompt lengkap</summary><div class="slideprompt">${esc(window.slidePrompts[i])}</div></details>
+   </article>`).join("");
+  $("slideCountLabel").textContent=slides.length+" slide";
+  $("copyMaster").disabled=false;$("copyGuide").disabled=false;$("showGuide").disabled=false;
+  $("blueprintStatus").textContent="✓ Blueprint, prompt per slide, dan Panduan Penyuluh berhasil dibuat.";
+  $("blueprintStatus").classList.add("done-state");
+ }catch(e){
+  $("blueprintStatus").textContent="Gagal menyusun blueprint: "+e.message;
+  console.error("PENA blueprint error:",e);
+ }
+}
+$("makeBlueprint").onclick=buildBlueprint;
 
 function makeGuideSchedule(total,formatName,situationName){
  const f=(formatName||"").toLowerCase(), sit=(situationName||"").toLowerCase();
