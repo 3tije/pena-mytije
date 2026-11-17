@@ -190,7 +190,7 @@ function knowledgeBriefText(){
    "Gunakan evidence hanya sesuai klaim, populasi, konteks, dan batas generalisasinya.",
    "Jangan membuat angka, statistik, regulasi, kutipan, fakta, atau referensi baru.",
    "Jika data atau rujukan tidak tersedia, tandai sebagai kebutuhan verifikasi dan jangan mengarang.",
-   "Simpan atribusi penulis, tahun, judul, halaman/bagian, dan URL pada catatan pembicara atau referensi slide."
+   "Simpan atribusi penulis, tahun, judul, halaman/bagian, dan URL hanya pada speaker notes atau lembar referensi terpisah; jangan tampilkan pada kanvas visual slide."
   ]
  },null,2);
 }
@@ -227,13 +227,18 @@ MANDAT KREATIF
 8. Setiap slide harus memiliki fungsi komunikasi berbeda. Hindari repetisi dan slide yang hanya mengulang definisi.
 9. Buat isi layar ringkas; pindahkan penjelasan lebih lengkap ke speaker notes.
 10. Sesuaikan gaya dengan sasaran, situasi, format, tujuan, dan durasi.
+11. KANVAS VISUAL SLIDE WAJIB BERSIH: tidak boleh ada sitasi, nama penulis/tahun, judul buku/jurnal, DOI, URL, daftar pustaka, kotak rujukan, atau footer referensi.
+12. Semua atribusi ilmiah dipindahkan ke speaker notes yang terpisah dari teks visual slide. Slide daftar referensi hanya jika diminta secara eksplisit.
 
 INTEGRITAS ILMIAH
 - Jangan mengarang fakta, angka, statistik, regulasi, kutipan, nama penulis, judul, tahun, halaman, DOI, atau URL.
 - Bedakan teori/kerangka konseptual dari evidence empiris.
 - Gunakan temuan hanya sesuai konteks, populasi, metode, dan batas generalisasinya.
-- Jika sumber belum tersedia, tulis [PERLU VERIFIKASI SUMBER].
-- Cantumkan rujukan yang benar-benar mendukung klaim pada catatan pembicara atau referensi slide.
+- Jika sumber belum tersedia, tulis [PERLU VERIFIKASI SUMBER] hanya pada speaker notes/catatan verifikasi, bukan pada kanvas visual slide.
+- DILARANG menampilkan nama penulis, tahun, judul buku/jurnal, DOI, URL, sitasi, daftar pustaka, atau footer referensi pada area visual slide.
+- Jangan membuat kotak rujukan atau baris referensi di bagian bawah slide.
+- Catat semua rujukan yang benar-benar mendukung klaim secara lengkap di SPEAKER NOTES, terpisah dari isi visual.
+- Jika diperlukan, buat satu bagian/slide daftar referensi di akhir HANYA jika pengguna memintanya secara eksplisit.
 - Jangan membuat hubungan sebab-akibat jika sumber hanya menunjukkan asosiasi.
 - Gunakan bahasa nonstigmatis dan berorientasi martabat manusia.
 
@@ -242,7 +247,7 @@ ${roles}
 
 OUTPUT YANG DIMINTA
 A. Rancangan storyline: gagasan sentral, alur argumentasi, dan alasan urutannya.
-B. Rancangan setiap slide: nomor, judul yang kuat, satu pesan utama, 3–5 poin ringkas, ide visual/layout, speaker notes, dan referensi.
+B. Rancangan setiap slide: nomor, judul yang kuat, satu pesan utama, 3–5 poin ringkas, ide visual/layout, serta speaker notes. Referensi dicatat hanya di speaker notes, tidak di kanvas visual slide.
 C. Catatan teori: teori/konsep yang digunakan, fungsi penjelasannya, dan batasnya.
 D. Catatan evidence: klaim yang didukung, sumber, dan keterbatasan.
 E. Daftar bagian yang memerlukan verifikasi sebelum dipresentasikan.
@@ -280,14 +285,19 @@ INSTRUKSI
 - Kembangkan contoh, analogi, pertanyaan, atau visual yang membantu pembelajaran.
 - Jangan mengulang pesan slide lain.
 - Berikan arahan layout dan speaker notes.
-- Cantumkan sumber yang mendukung klaim. Jangan mengarang sitasi.
-- Jika informasi sumber tidak tersedia, beri penanda [PERLU VERIFIKASI SUMBER].
+- JANGAN tampilkan penulis, tahun, judul sumber, DOI, URL, sitasi, daftar pustaka, atau footer referensi pada gambar/kanvas slide.
+- JANGAN membuat kotak rujukan di bagian bawah slide.
+- Catat sumber pendukung secara lengkap hanya di SPEAKER NOTES, terpisah dari teks yang terlihat audiens.
+- Jika informasi sumber tidak tersedia, beri penanda [PERLU VERIFIKASI SUMBER] hanya di speaker notes/catatan verifikasi, bukan di visual slide.
+- Slide daftar referensi hanya dibuat jika pengguna memintanya secara eksplisit.
 
 LANDASAN SUBSTANSI
 Gunakan Knowledge Brief lengkap pada Master Prompt PENA yang telah disalin. Jika prompt ini digunakan terpisah, minta pengguna menyertakan Knowledge Brief dari Master Prompt.
 
 HASILKAN
-Judul final • Pesan utama • Isi layar • Konsep visual • Speaker notes • Referensi dan catatan verifikasi.`;
+1. KANVAS SLIDE: Judul final • Pesan utama • Isi layar • Konsep visual. Kanvas harus bersih tanpa sitasi, footer, atau daftar referensi.
+2. SPEAKER NOTES (tidak ditampilkan pada kanvas): Penjelasan lisan • Rujukan lengkap yang mendukung klaim • Halaman/bagian • Catatan verifikasi dan keterbatasan.
+3. Jangan membuat slide daftar pustaka kecuali diminta secara eksplisit.`;
 }
 function buildBlueprint(){
  if(!plan||!plan.themes?.length){
