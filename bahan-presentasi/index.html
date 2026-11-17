@@ -21,7 +21,7 @@ button{border:0;border-radius:9px;padding:10px 14px;background:var(--red);color:
 footer{text-align:center;color:#818a9b;font-size:11px;padding:20px}
 @media(max-width:850px){.brand{gap:12px}.brand-context{padding-left:12px}.brand-context h1{font-size:16px}.pena-word{font-size:27px}.pena-sub{font-size:8px}.tmt-float{width:82px;height:82px;right:12px;bottom:12px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.fieldgrid{grid-template-columns:1fr}header h1{font-size:21px}}
 @media print{header,nav,.no-print,footer{display:none!important}body{background:white}.page{display:none!important}#studio.page.active{display:block!important}.panel{border:0;box-shadow:none;padding:0}.slide{break-inside:avoid}}
-</style></head>
+.master-details{margin:12px 0;border:1px solid var(--line,#dbe2ea);border-radius:12px;background:#fff;padding:12px}.master-details summary{cursor:pointer;color:var(--ink,#1f2937);font-weight:700}.master-details summary .hint{font-weight:400;margin-left:6px}.guide-theme{margin:18px 0;padding:14px;border:1px solid var(--line,#dbe2ea);border-radius:12px}.guide-theme h4{margin-top:0}.guide-theme h5{margin:14px 0 6px}.guide-theme li{margin:7px 0;line-height:1.5}</style></head>
 <body>
 <header><div class="brand"><a class="pena-lockup" href="https://pena.mytije.com/" aria-label="Kembali ke Beranda PENA" title="Kembali ke pena.mytije.com"><span class="pena-word">PENA</span><span class="pena-pencil">✎</span><span class="pena-sub">CATATAN SEORANG<br>PENYULUH NARKOBA</span></a><div class="brand-context"><div class="eyebrow">RUANG KERJA PENYULUH</div><h1>Bahan Presentasi Penyuluhan Narkoba</h1><p>Rancang materi yang kontekstual, terarah, dan berbasis sumber.</p></div></div></header>
 <nav class="no-print">
@@ -360,7 +360,32 @@ function buildGuide(){
  const themes=plan.themes.map(d=>d.theme?.name||d.name||"Tema terpilih");
  const rows=sch.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.stage)}</td><td>${x.minutes}</td></tr>`).join("");
  const scheduleText=sch.map((x,i)=>`${i+1}. ${x.stage}: ${x.minutes} menit`).join("\n");
- guidePrompt=`PANDUAN PENYULUH P4GN — LANDASAN SUBSTANSI DAN REFERENSI\n\nSASARAN: ${plan.group?.name||"-"}\nSITUASI: ${plan.situation?.name||"-"}\nFORMAT: ${plan.format?.name||"Fleksibel"}\nTUJUAN: ${plan.goal?.name||"-"}\nDURASI: ${plan.duration} menit\nTEMA: ${themes.join("; ")}\n\nPOLA PENYAMPAIAN DAN ALOKASI WAKTU:\n${scheduleText}\n\nARAHAN PELAKSANAAN:\n- Awali dengan konteks yang dekat dengan peserta dan jelaskan tujuan kegiatan.\n- Sampaikan pesan utama sesuai tema dan sumber yang dipilih.\n- Gunakan contoh atau aktivitas yang sesuai sasaran; jangan menambahkan klaim faktual di luar sumber.\n- Beri ruang refleksi, pertanyaan, atau partisipasi sesuai format kegiatan.\n- Tutup dengan rangkuman, ajakan realistis, dan informasi bantuan/rujukan yang telah diverifikasi.\n\nTEMA TERPILIH:\n${themes.map((x,i)=>`${i+1}. ${x}`).join("\n")}\n\nCATATAN: Panduan ini adalah pegangan substansi penyuluh, bukan naskah slide. Saat mengembangkan presentasi, susun ulang narasi secara kreatif sesuai audiens; jangan menyalin struktur panduan. Pertahankan akurasi substansi dan keterlacakan sumber.`;
+ const knowledgeSections=plan.themes.map((d,idx)=>{
+  const t=d.theme||{};
+  const theories=(d.topics||[]).map((x,j)=>({
+   id:x.id,name:x.name,kind:x.kind||x.pillar,description:x.description||"",
+   mechanism:x.message||"",use:x.outcome||"",limits:x.limitations||"",
+   reference:x.sourceReference||"",url:x.sourceUrl||""
+  }));
+  const evidence=(d.candidates||[]).map(x=>({
+   id:x.id,claim:x.substance||"",finding:x.finding||"",
+   reference:x.reference||"",url:x.url||"",verification:x.verification||"",
+   limits:x.traceNote||""
+  }));
+  const sources=(d.sourceCandidates||[]).map(x=>({
+   id:x.id,title:x.title||"",author:x.author||"",year:x.year||"",
+   location:x.pages||"",url:x.url||"",role:x.role||"",
+   verification:x.verification||""
+  }));
+  const theoryHtml=theories.length?`<h5>Teori dan konsep pendukung</h5><ul>${theories.map(x=>`<li><b>${esc(x.name)}</b> — ${esc(x.description)}${x.use?`<br><span class="hint">Kegunaan: ${esc(x.use)}</span>`:""}${x.limits?`<br><span class="hint">Batasan: ${esc(x.limits)}</span>`:""}${x.reference?`<br><span class="hint">Rujukan teori: ${esc(x.reference)}${x.url?` · ${esc(x.url)}`:""}</span>`:""}</li>`).join("")}</ul>`:`<p class="hint">Belum ada teori/konsep yang terhubung pada tema ini.</p>`;
+  const evidenceHtml=evidence.length?`<h5>Evidence dan temuan</h5><ol>${evidence.map(x=>`<li>${esc(x.claim||x.finding)}${x.reference?`<br><span class="hint">Sumber: ${esc(x.reference)}${x.url?` · ${esc(x.url)}`:""}</span>`:""}${x.verification?`<br><span class="hint">Status verifikasi: ${esc(x.verification)}</span>`:""}${x.limits?`<br><span class="hint">Batas generalisasi: ${esc(x.limits)}</span>`:""}</li>`).join("")}</ol>`:`<p class="hint">Belum ada evidence empiris yang terhubung. Jangan membuat klaim faktual tambahan.</p>`;
+  const sourceHtml=sources.length?`<h5>Daftar sumber/rujukan tema</h5><ol>${sources.map(x=>`<li>${esc([x.author,x.year,x.title].filter(Boolean).join(". "))}${x.location?` — Bagian: ${esc(x.location)}`:""}${x.role?` — ${esc(x.role)}`:""}${x.url?`<br><span class="hint">${esc(x.url)}</span>`:""}${x.verification?`<br><span class="hint">Status: ${esc(x.verification)}</span>`:""}</li>`).join("")}</ol>`:`<p class="hint">Belum ada sumber tema yang tercatat melalui relasi sumber.</p>`;
+  return {
+   text:`TEMA ${idx+1}: ${t.name||themes[idx]}\nRingkasan: ${t.substance||""}\nUraian: ${t.description||""}\n\nTEORI/KONSEP:\n${theories.map(x=>`- ${x.name}: ${x.description} Kegunaan: ${x.use} Batasan: ${x.limits} Rujukan: ${x.reference} ${x.url}`).join("\n")||"Belum ada teori terhubung."}\n\nEVIDENCE:\n${evidence.map(x=>`- ${x.claim||x.finding} | Sumber: ${x.reference} | URL: ${x.url} | Verifikasi: ${x.verification} | Batas: ${x.limits}`).join("\n")||"Belum ada evidence empiris terhubung."}\n\nSUMBER TEMA:\n${sources.map(x=>`- ${[x.author,x.year,x.title].filter(Boolean).join(". ")} | Bagian: ${x.location} | Peran: ${x.role} | URL: ${x.url} | Verifikasi: ${x.verification}`).join("\n")||"Belum ada relasi sumber tema."}`,
+   html:`<section class="guide-theme"><h4>${idx+1}. ${esc(t.name||themes[idx])}</h4><p>${esc(t.substance||"")}</p>${t.description?`<p>${esc(t.description)}</p>`:""}${theoryHtml}${evidenceHtml}${sourceHtml}</section>`
+  };
+ });
+ guidePrompt=`PANDUAN PENYULUH P4GN — LANDASAN SUBSTANSI DAN REFERENSI\n\nSASARAN: ${plan.group?.name||"-"}\nSITUASI: ${plan.situation?.name||"-"}\nFORMAT: ${plan.format?.name||"Fleksibel"}\nTUJUAN: ${plan.goal?.name||"-"}\nDURASI: ${plan.duration} menit\nTEMA: ${themes.join("; ")}\n\nPOLA PENYAMPAIAN DAN ALOKASI WAKTU:\n${scheduleText}\n\nARAHAN PELAKSANAAN:\n- Awali dengan konteks yang dekat dengan peserta dan jelaskan tujuan kegiatan.\n- Sampaikan pesan utama sesuai tema dan sumber yang dipilih.\n- Gunakan contoh atau aktivitas yang sesuai sasaran; jangan menambahkan klaim faktual di luar sumber.\n- Beri ruang refleksi, pertanyaan, atau partisipasi sesuai format kegiatan.\n- Tutup dengan rangkuman, ajakan realistis, dan informasi bantuan/rujukan yang telah diverifikasi.\n\n${knowledgeSections.map(x=>x.text).join("\n\n")}\n\nCATATAN: Panduan ini adalah pegangan substansi penyuluh. Sumber, teori, evidence, halaman/bagian, dan status verifikasi dipertahankan agar penyuluh mengetahui dasar materi. Saat mengembangkan presentasi, susun ulang narasi secara kreatif sesuai audiens; jangan menyalin struktur panduan.`;
  $("guideOutput").innerHTML=`<h3>Panduan Pelaksanaan Penyuluhan</h3>
  <div class="guide-meta"><span><b>Sasaran:</b> ${esc(plan.group?.name||"-")}</span><span><b>Durasi:</b> ${plan.duration} menit</span><span><b>Format:</b> ${esc(plan.format?.name||"Fleksibel")}</span></div>
  <p><b>Tujuan perubahan:</b> ${esc(plan.goal?.name||"-")}</p>
@@ -373,7 +398,8 @@ function buildGuide(){
  <li><b>Interaksi:</b> gunakan pertanyaan, contoh, diskusi, atau latihan sesuai format kegiatan.</li>
  <li><b>Penegasan:</b> rangkum pesan kunci dan hubungkan dengan tindakan yang realistis.</li>
  <li><b>Penutup:</b> sampaikan ajakan dan jalur bantuan/rujukan yang telah dipastikan kebenarannya.</li></ol>
- <div class="guide-callout">Jaga penyampaian tetap partisipatif, tidak menghakimi, tidak menstigma, dan tidak menakut-nakuti. Jangan menambahkan fakta atau angka yang tidak didukung sumber.</div>
+ ${knowledgeSections.map(x=>x.html).join("")}
+ <div class="guide-callout">Jaga penyampaian tetap partisipatif, tidak menghakimi, tidak menstigma, dan tidak menakut-nakuti. Jangan menambahkan fakta atau angka yang tidak didukung sumber. Rujukan pada panduan ini merupakan landasan substansi, bukan kewajiban untuk ditampilkan pada kanvas slide.</div>
  <div class="toolbar no-print"><button class="small softbtn" onclick="copyText(guidePrompt,'Panduan Penyuluh berhasil disalin.',this)">Salin Panduan Ini</button><button class="small softbtn" onclick="window.print()">Cetak Panduan</button></div>`;
  $("copyGuide").disabled=false;$("showGuide").disabled=false;
 }
@@ -384,7 +410,7 @@ function buildBlueprint(){
   masterPrompt=buildMaster(slides);
   buildGuide();
   $("studioContext").textContent=`Sasaran: ${plan.group?.name||"-"} • Situasi: ${plan.situation?.name||"-"} • Tujuan: ${plan.goal?.name||"-"} • ${plan.duration} menit • ${plan.themes.length} tema terpilih.`;
-  $("blueprintOutput").innerHTML=`<div class="notice success"><b>Prompt Kreatif Presentasi siap.</b> AI akan merancang storyline dan isi slide baru berdasarkan Knowledge Brief, bukan menyalin Panduan Penyuluh atau urutan database.</div><div class="slideprompt">${esc(masterPrompt)}</div>`;
+  $("blueprintOutput").innerHTML=`<div class="notice success"><b>Prompt Kreatif Presentasi siap.</b> AI akan merancang storyline dan isi slide baru berdasarkan Knowledge Brief, bukan menyalin Panduan Penyuluh atau urutan database.</div><details class="master-details"><summary><b>Lihat isi Master Blueprint</b> <span class="hint">Termasuk Knowledge Brief yang akan ikut disalin</span></summary><div class="slideprompt">${esc(masterPrompt)}</div></details><details class="master-details"><summary><b>Lihat ringkasan Knowledge Brief</b> <span class="hint">Landasan materi yang disertakan untuk AI</span></summary><div class="slideprompt">${esc(knowledgeBriefText())}</div></details>`;
   window.slidePrompts=slides.map((s,i)=>makeSlidePrompt(s,i,slides));
   $("slideList").innerHTML=slides.map((s,i)=>`<article class="slide">
    <div class="sectionhead"><span class="tag">PERAN ${String(i+1).padStart(2,"0")}</span>
