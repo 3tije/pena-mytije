@@ -21,7 +21,25 @@ button{border:0;border-radius:9px;padding:10px 14px;background:var(--red);color:
 footer{text-align:center;color:#818a9b;font-size:11px;padding:20px}
 @media(max-width:850px){.brand{gap:12px}.brand-context{padding-left:12px}.brand-context h1{font-size:16px}.pena-word{font-size:27px}.pena-sub{font-size:8px}.tmt-float{width:82px;height:82px;right:12px;bottom:12px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.fieldgrid{grid-template-columns:1fr}header h1{font-size:21px}}
 @media print{header,nav,.no-print,footer{display:none!important}body{background:white}.page{display:none!important}#studio.page.active{display:block!important}.panel{border:0;box-shadow:none;padding:0}.slide{break-inside:avoid}}
-.master-details{margin:12px 0;border:1px solid var(--line,#dbe2ea);border-radius:12px;background:#fff;padding:12px}.master-details summary{cursor:pointer;color:var(--ink,#1f2937);font-weight:700}.master-details summary .hint{font-weight:400;margin-left:6px}.guide-theme{margin:18px 0;padding:14px;border:1px solid var(--line,#dbe2ea);border-radius:12px}.guide-theme h4{margin-top:0}.guide-theme h5{margin:14px 0 6px}.guide-theme li{margin:7px 0;line-height:1.5}</style></head>
+.master-details{margin:12px 0;border:1px solid var(--line,#dbe2ea);border-radius:12px;background:#fff;padding:12px}.master-details summary{cursor:pointer;color:var(--ink,#1f2937);font-weight:700}.master-details summary .hint{font-weight:400;margin-left:6px}.guide-theme{margin:18px 0;padding:14px;border:1px solid var(--line,#dbe2ea);border-radius:12px}.guide-theme h4{margin-top:0}.guide-theme h5{margin:14px 0 6px}.guide-theme li{margin:7px 0;line-height:1.5}
+/* Automatic MyTije closing slide */
+.closing-slide{position:relative;overflow:hidden;aspect-ratio:16/9;max-width:900px;margin:14px auto 22px;border:1px solid #dce4ed;border-radius:14px;background:linear-gradient(135deg,#fff 0%,#f4f9ff 58%,#eef8f1 100%);padding:clamp(16px,3vw,34px);display:grid;grid-template-columns:1fr 1.12fr;gap:22px;align-items:center;box-shadow:0 8px 26px #17203310}
+.closing-brand{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.closing-brand img{width:min(100%,390px);height:auto;object-fit:contain}
+.closing-brand .closing-tagline{font-size:clamp(10px,1.4vw,16px);font-weight:800;color:#172f55}
+.closing-content h3{font-size:clamp(22px,3vw,38px);line-height:1.1;margin:0 0 8px;color:#082756}
+.closing-content>p{font-size:clamp(10px,1.25vw,15px);color:#526176;margin:0 0 14px}
+.closing-links{display:grid;gap:9px}
+.closing-link{display:flex;align-items:center;gap:10px;text-decoration:none;background:#fff;border:1px solid #dfe7f0;border-radius:10px;padding:9px 12px;color:#082756;box-shadow:0 3px 10px #17203308}
+.closing-link b{display:block;font-size:clamp(10px,1.2vw,14px)}
+.closing-link span{display:block;font-size:clamp(10px,1.15vw,14px);font-weight:850}
+.closing-link.portal span{color:#0877c8}.closing-link.books span{color:#239b4b}.closing-link.ask span{color:#cf252e}
+.closing-dot{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;color:white;font-weight:900;background:#0877c8}
+.closing-link.books .closing-dot{background:#239b4b}.closing-link.ask .closing-dot{background:#cf252e}
+.closing-note{font-size:10px;color:#718096;margin-top:10px}
+.closing-slide:after{content:"";position:absolute;left:0;right:0;bottom:0;height:7px;background:linear-gradient(90deg,#239b4b 0 33%,#0877c8 33% 72%,#082756 72%)}
+@media(max-width:560px){.closing-slide{gap:10px;padding:12px}.closing-links{gap:5px}.closing-link{padding:5px 7px}.closing-dot{width:22px;height:22px;flex-basis:22px}}
+</style></head>
 <body>
 <header><div class="brand"><a class="pena-lockup" href="https://pena.mytije.com/" aria-label="Kembali ke Beranda PENA" title="Kembali ke pena.mytije.com"><span class="pena-word">PENA</span><span class="pena-pencil">✎</span><span class="pena-sub">CATATAN SEORANG<br>PENYULUH NARKOBA</span></a><div class="brand-context"><div class="eyebrow">RUANG KERJA PENYULUH</div><h1>Bahan Presentasi Penyuluhan Narkoba</h1><p>Rancang materi yang kontekstual, terarah, dan berbasis sumber.</p></div></div></header>
 <nav class="no-print">
@@ -73,7 +91,7 @@ footer{text-align:center;color:#818a9b;font-size:11px;padding:20px}
 <section id="about" class="page"><div class="panel"><h2>Tentang PENA</h2><p>PENA adalah sistem penyusunan bahan presentasi penyuluhan narkoba berbasis database materi dan pemetaan konteks. Sistem menyimpan struktur pengetahuan dan menyusun prompt presentasi; proses generasi visual dilakukan pada aplikasi AI yang dipilih pengguna, misalnya ChatGPT.</p><div class="statrow" id="dbStats"></div><h3>Prinsip penggunaan</h3><ul><li>Substansi materi dan pesan sumber dipertahankan sesuai database.</li><li>AI eksternal tidak boleh menambahkan fakta, angka, regulasi, statistik, atau referensi yang tidak terdapat dalam sumber terpilih.</li><li>Visual, ilustrasi, komposisi, dan tata letak boleh dikembangkan tanpa mengubah substansi.</li><li>Pilihan materi disesuaikan dengan konteks kegiatan dan sumber yang tersedia.</li><li>Hasil akhir tetap diperiksa oleh penyuluh sebelum digunakan.</li></ul><div class="notice">PENA menyiapkan rancangan dan prompt presentasi agar dapat dikembangkan lebih lanjut oleh penyuluh.</div></div></section>
 </main><a class="tmt-float" href="../tmt.html" aria-label="Buka Tanya Om Tije"><img src="assets/tanya-om-tije-badge.webp" alt="Tanya Om Tije"><span class="tmt-float-label">Tanya Om Tije</span></a><footer>PENA • Bahan Presentasi Penyuluhan Narkoba</footer>
 <script>
-/* PENA Presentation Engine v2.3 — UI dipertahankan; mesin slide diperbarui */
+/* PENA Presentation Engine v2.4 — UI dipertahankan; slide penutup MyTije otomatis */
 const API_URL="https://script.google.com/macros/s/AKfycbzFirihxDIn9hc8hfLD95S6TpCoK10MWlz4VoAmk507m5w9TIAMS81wx2vc8H7tdRZ64g/exec";
 let db=null, selected=[], details={}, plan=null, masterPrompt="",guidePrompt="";
 const $=id=>document.getElementById(id);
@@ -403,10 +421,35 @@ function buildGuide(){
  <div class="toolbar no-print"><button class="small softbtn" onclick="copyText(guidePrompt,'Panduan Penyuluh berhasil disalin.',this)">Salin Panduan Ini</button><button class="small softbtn" onclick="window.print()">Cetak Panduan</button></div>`;
  $("copyGuide").disabled=false;$("showGuide").disabled=false;
 }
+
+function renderClosingSlide(number){
+ return `<article class="slide">
+  <div class="sectionhead"><span class="tag">SLIDE ${String(number).padStart(2,"0")} • PENUTUP OTOMATIS</span><span class="pill">TEMPLATE MYTIJE</span></div>
+  <h3>Penutup dan branding MyTije</h3>
+  <p class="hint">Slide ini ditambahkan otomatis oleh PENA. Tidak memerlukan prompt AI dan tidak mengubah materi penyuluhan.</p>
+  <div class="closing-slide">
+   <div class="closing-brand">
+    <img src="assets/mytije-logo.png" alt="Logo MyTije.com">
+    <div class="closing-tagline">Ruang Karya, Pembelajaran, dan Inspirasi</div>
+   </div>
+   <div class="closing-content">
+    <h3>Terima Kasih</h3>
+    <p>Mari terus belajar, berbagi, dan berkontribusi untuk generasi yang sehat, tangguh, dan bebas dari narkoba.</p>
+    <div class="closing-links">
+     <a class="closing-link portal" href="https://mytije.com" target="_blank" rel="noopener"><span class="closing-dot">↗</span><span><b>Portal Utama</b>mytije.com</span></a>
+     <a class="closing-link books" href="https://buku.mytije.com" target="_blank" rel="noopener"><span class="closing-dot">▤</span><span><b>Koleksi Buku</b>buku.mytije.com</span></a>
+     <a class="closing-link ask" href="https://pena.mytije.com" target="_blank" rel="noopener"><span class="closing-dot">?</span><span><b>Tanya Om Tije</b>pena.mytije.com</span></a>
+    </div>
+    <div class="closing-note">Klik alamat portal untuk membuka situs terkait.</div>
+   </div>
+  </div>
+ </article>`;
+}
+
 function buildBlueprint(){
  if(!plan||!plan.themes?.length){$("blueprintStatus").textContent="Susun rancangan penyuluhan dan pilih tema terlebih dahulu.";return;}
  try{
-  const slides=makeSlideData(getSlideCount());
+  const slides=makeSlideData(getSlideCount()); // slide materi; slide penutup dibuat terpisah oleh PENA
   masterPrompt=buildMaster(slides);
   buildGuide();
   $("studioContext").textContent=`Sasaran: ${plan.group?.name||"-"} • Situasi: ${plan.situation?.name||"-"} • Tujuan: ${plan.goal?.name||"-"} • ${plan.duration} menit • ${plan.themes.length} tema terpilih.`;
@@ -418,8 +461,8 @@ function buildBlueprint(){
    <h3>${esc(s.title)}</h3><p>${esc(s.focus)}</p>
    <p class="hint">Ini peran pembelajaran yang disarankan, bukan judul atau isi slide final. AI boleh mengubah struktur berdasarkan storyline.</p>
    <details><summary class="hint">Lihat prompt pengembangan</summary><div class="slideprompt">${esc(window.slidePrompts[i])}</div></details>
-   </article>`).join("");
-  $("slideCountLabel").textContent=slides.length+" peran pembelajaran";
+   </article>`).join("") + renderClosingSlide(slides.length+1);
+  $("slideCountLabel").textContent=(slides.length+1)+" slide (termasuk penutup MyTije)";
   $("copyMaster").disabled=false;$("copyGuide").disabled=false;$("showGuide").disabled=false;
   $("blueprintStatus").textContent="✓ Knowledge Brief, Panduan Penyuluh, dan Prompt Kreatif Presentasi berhasil dibuat.";
   $("blueprintStatus").classList.add("done-state");
